@@ -10,15 +10,14 @@ public class Client extends JFrame {
     private JPanel contentPane;
     int rows = 15;
     int column  = 10;
-    int minenumber = 5; // 雷的数目
-    int[][] map;
-    MineField mineField = new MineField();
+    int minenumber = 10; // 雷的数目
+    int[][] map; // 雷区地图
+    MineField mineField;
     public Client() throws HeadlessException {
-        map = new int[rows][column]; // 游戏地图
-        InitMap();// 初始化雷区
         contentPane = (JPanel) this.getContentPane();
         this.setSize(new Dimension(540, 670));
         this.setTitle("客户端");
+        mineField = new MineField();
         contentPane.setLayout(null);
         contentPane.add(mineField);
     }
@@ -37,7 +36,7 @@ public class Client extends JFrame {
             }catch (Exception e){
                 System.err.println(e.getStackTrace().toString());
             }
-
+            SetMines();// 设置雷区
         }
         @Override
         public void paint(Graphics g) {
@@ -78,17 +77,28 @@ public class Client extends JFrame {
                     }
                 }
         }
-
-        @Override
-        public void printComponent(Graphics g) {
-//            super.printComponent(g);
-//            // // 绘制雷区
-//            g.setColor(Color.black);
-//            //for (int i =0; i<10; i ++) {
-//            g.drawLine(0,0,100,100);
-//           // }
-//            g.fillOval(10,10,10,10);
-
+        // 布雷函数
+        private void SetMines(){
+            map = new int[rows][column]; // 游戏地图
+            // 初始化为0
+            for (int i = 0;i<rows;i++)
+                for (int j =0;j<column;j++){
+                    map[i][j] = 0; // 初始化为0
+                }
+            // 设置每个雷的位置 当雷的数目比地图的数目还多的时候会发生死循环，待解决
+            for (int i = 0;i<minenumber;i++){
+                    while (true){
+                    // 随机产生一个雷的x 和 y
+                    int randomX = (int)(0+Math.random()*(rows));
+                    int randomY = (int)(0+Math.random()*(column));
+                    if (map[randomX][randomY] != -2){
+                        map[randomX][randomY] = -2;
+                        System.out.println("设置雷区为:"+randomX+"|"+randomY);
+                        break; // 退出循环
+                    }
+                    System.out.println("重复雷区:"+randomX+"|"+randomY);
+                    }
+            }
         }
     }
 
@@ -106,7 +116,6 @@ public class Client extends JFrame {
             int clickcolumn = clickX/40; // 列数
             int clicknum = e.getButton();
             if (clicknum == 1) { // 按下鼠标左键
-               // x+=100;
                 System.out.println("按下鼠标左键");
                 map[clickrow][clickcolumn] += 1;
                 repaint();
@@ -127,13 +136,6 @@ public class Client extends JFrame {
 
         }
     }
-private void  InitMap(){
-        for (int i = 0;i<rows;i++)
-            for (int j =0;j<column;j++){
-                map[i][j] = 1; // 初始化为
-
-            }
-}
     public static void main(String[] argv){
         System.out.println("Hello World");
         Client frm = new Client();
