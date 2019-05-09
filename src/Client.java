@@ -16,13 +16,27 @@ public class Client extends JFrame {
     Mine[] mines; // 地雷数组
     Boolean GameEnd = false; // 游戏结束标记
     MineField mineField;
+    JLabel showtimeLabel; // 时间标签,用于显示消耗掉的时间
+
+    // 计数线程
+    CountingThread counter;
     public Client() throws HeadlessException {
         contentPane = (JPanel) this.getContentPane();
+        contentPane.setLayout(null);
         this.setSize(new Dimension(1000, 1000));
         this.setTitle("客户端");
         mineField = new MineField();
-        contentPane.setLayout(null);
+
+        // 时间标签实例化
+        showtimeLabel = new JLabel("0000:000");
         contentPane.add(mineField);
+
+        contentPane.add(showtimeLabel); // 添加入组件
+        showtimeLabel.setBounds(column*40+100,40,200,50);
+
+        counter = new CountingThread();
+        counter.StartCount(); // 开始计数
+        counter.start(); // 开启线程
     }
     // 游戏结束
     public void GameOver(){
@@ -30,6 +44,9 @@ public class Client extends JFrame {
         for (int i = 0;i < minenumber;i++){
             map[mines[i].getX()][mines[i].getY()] = -2;
         }
+
+        // 停止计数
+        counter.EndCount();
     }
     // 雷类 一个雷
     class Mine {
@@ -281,6 +298,48 @@ public class Client extends JFrame {
                 return true;
             }
             return false;
+        }
+    }
+
+    // 计时类
+    public class CountingThread extends Thread {
+        public boolean gamestop = true; // 开始游戏是默认关闭计数的
+        public long gameStartTime = 0; // 游戏开始计数的时间
+        CountingThread(){
+            setDaemon(true); // 设置为守护线程
+        }
+        @Override
+        public void run() {
+            while (true) {
+                if (!gamestop) {
+                    // 游戏开始
+                    long elpased = System.currentTimeMillis() - gameStartTime; // 已经过了多少时间
+                    // 格式化时间为 秒数：毫秒
+                    int milli = (int) (elpased % 1000); // 毫秒数
+                    elpased = elpased / 60;
+                    int second = (int) (elpased / 60);  // 秒数
+                    String showTime = String.format("%02d:%02d", second, milli);
+                    // 设置时间标志
+                    showtimeLabel.setText(showTime);
+                    // System.out.println("时间" + showTime);
+                }
+                try {
+                    sleep(100); // 每100毫秒更新一次
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    System.exit(1);// 退出
+                }
+            }
+        }
+        // 开始计数
+        public void StartCount(){
+            gameStartTime = System.currentTimeMillis(); // 获得开始时间
+            gamestop = false;
+        }
+        // 停止计数
+        public void EndCount(){
+            gamestop = true;
         }
     }
     public static void main(String[] argv){
