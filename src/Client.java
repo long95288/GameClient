@@ -9,9 +9,9 @@ import java.text.CollationElementIterator;
 
 public class Client extends JFrame {
     private JPanel contentPane;
-    int rows = 20;
-    int column  = 9;
-    int minenumber = 20; // 雷的数目
+    int rows = 5;
+    int column  = 3;
+    int minenumber = 3; // 雷的数目
     int[][] map; // 雷区地图
     Mine[] mines; // 地雷数组
     Boolean GameEnd = false; // 游戏结束标记
@@ -192,8 +192,12 @@ public class Client extends JFrame {
             }else { // 按下其他键位
                 System.out.println(clicknum);
             }
-
-            System.out.println(clickX+":"+clickY);
+            // System.out.println(clickX+":"+clickY);
+            if (CheckWin()){
+               // 赢了,设置相关的处理逻辑
+               System.out.println("游戏结束了");
+               GameOver(); // 游戏结束
+            }
 
         }
 
@@ -259,6 +263,23 @@ public class Client extends JFrame {
             }
             //
             System.out.println("X"+x+"Y"+y+"该点无效");
+            return false;
+        }
+
+        // 判断是否已经赢了
+        public  boolean CheckWin(){
+            int number = rows * column; // 初始化为都没有被揭开过的
+            for (int i = 0;i < rows;i ++)
+                for (int j =0; j < column;j ++){
+                    if (map[i][j] != -3 && map[i][j] != -1){
+                        // 去掉揭开了的方块,剩下的就是未揭开的
+                        number --;
+                    }
+                }
+            if (number <= minenumber){
+                // 当剩余的方块数小于等于地雷数，便可以判断为游戏结束
+                return true;
+            }
             return false;
         }
     }
