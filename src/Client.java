@@ -9,16 +9,16 @@ import java.text.CollationElementIterator;
 
 public class Client extends JFrame {
     private JPanel contentPane;
-    int rows = 15;
-    int column  = 10;
-    int minenumber = 10; // 雷的数目
+    int rows = 20;
+    int column  = 9;
+    int minenumber = 20; // 雷的数目
     int[][] map; // 雷区地图
     Mine[] mines; // 地雷数组
     Boolean GameEnd = false; // 游戏结束标记
     MineField mineField;
     public Client() throws HeadlessException {
         contentPane = (JPanel) this.getContentPane();
-        this.setSize(new Dimension(540, 670));
+        this.setSize(new Dimension(1000, 1000));
         this.setTitle("客户端");
         mineField = new MineField();
         contentPane.setLayout(null);
@@ -52,7 +52,7 @@ public class Client extends JFrame {
 
         public MineField() {
             this.addMouseListener(new MyMouseListenr());
-            this.setSize(new Dimension(540, 670));
+            this.setSize(new Dimension(column*40, rows*40));
             this.setBackground(Color.cyan);
             try{
                 flagimg = ImageIO.read(new File("flag.png"));
@@ -98,6 +98,7 @@ public class Client extends JFrame {
                         // 绘制灰色未探索的
                         g.setColor(Color.gray);
                         g.fillRect(j*40+2,i*40+2,37,37);
+                        g.setColor(Color.black);
                     }
                     else if (status > 0){
                         // 绘制数字
@@ -140,24 +141,10 @@ public class Client extends JFrame {
                     System.out.println("重复雷区:"+randomX+"|"+randomY);
                 }
             }
-            // mines[0].setXY(2,2);
-            // mines[8].setXY(4,4);
-            //
             for (int i=0;i< minenumber;i++){
                 System.out.println("地雷数据:"+mines[i].getX()+"|"+mines[i].getY());
             }
         }
-
-
-        // 判断当前点是否是雷的函数
-//        public boolean isMine(int x,int y){
-//            for (int i =0 ;i < minenumber;i++){
-//                if ((mines[i].getX() == x) && (mines[i].getX() == y)){
-//                    return true; // 当前坐标是雷
-//                }
-//            }
-//            return false;
-//        }
     }
 
     // 鼠标监听类
@@ -165,48 +152,48 @@ public class Client extends JFrame {
         @Override
         public void mousePressed(MouseEvent e) {
             super.mousePressed(e);
-            //
-            int clickX = e.getX(); // 获得单击的X坐标
-            int clickY = e.getY(); // 获得单击的Y坐标
-
+            System.out.println("xp"+e.getX()+"yp"+e.getY());
             // 计算出单击的格数
-            int clickrow = clickY/40; // 行数
-            int clickcolumn = clickX/40; // 列数
+            int clickX = e.getY()/40; // 行数
+            int clickY = e.getX()/40; // 列数
             int clicknum = e.getButton();
-            System.out.println("单击:"+clickrow+"|"+clickcolumn);
-            if (clicknum == 1) { // 按下鼠标左键
-                if (map[clickrow][clickcolumn] == -1) {
+            System.out.println("单击:"+clickX+"|"+clickY);
+            if (clicknum == 1 && isValid(clickX,clickY)) { // 按下鼠标左键
+                if (map[clickX][clickY] == -1) {
                     // 如果是旗子，去掉旗子
-                    map[clickrow][clickcolumn] = 0;
-                }else if (isMine(clickrow,clickcolumn)) {
+                    map[clickX][clickY] = -3; // 恢复默认灰色
+                }else if (isMine(clickX,clickY)) {
                     // 如果触雷，则结束游戏
                     GameOver();
                     System.out.println("碰雷");
-                }else if (map[clickrow][clickcolumn] == 0){
-                    // 设置雷区
-                    SetMap(clickrow,clickrow);
-                    // map[clickrow][clickcolumn] = dd; // 设置周围雷区
+                }else if (map[clickX][clickY] == -3){
+                    // 挖开
+                    int surroundmines = GetSurroundMines(clickX,clickY);
+                    if (surroundmines == 0){
+                        // 该点没有雷。挖开,并挖开周围的八块区域
+                        map[clickX][clickY] = 0;
+                        SetSurround(clickX,clickY);
+                    } else {
+                      // 该点周围有雷,显示数字
+                      map[clickX][clickY] = surroundmines;
+                    }
+                    // map[clickX][clickY] = dd; // 设置周围雷区
                 }
                 System.out.println("按下鼠标左键");
                 repaint();
-            }else if (clicknum == 3){ // 按下鼠标右键
+            }else if (clicknum == 3 && isValid(clickX,clickY)){ // 按下鼠标右键
                 //x-=100;
                 // 如果该点为0，则打上旗子标记
-                if (map[clickrow][clickcolumn] == 0){
-                    map[clickrow][clickcolumn] = -1;
+                if (map[clickX][clickY] == -3){
+                    map[clickX][clickY] = -1;
                 }
-                // 如果该点的值为-1，则改为0，取消旗子标记
-//                if(map[clickrow][clickcolumn] == -1){
-//                    map[clickrow][clickcolumn] = 0;
-//                }
-                // map[clickrow][clickcolumn] -= 1;
                 repaint();
                 System.out.println("按下鼠标右键");
             }else { // 按下其他键位
                 System.out.println(clicknum);
             }
 
-            System.out.println(clickrow+":"+clickcolumn);
+            System.out.println(clickX+":"+clickY);
 
         }
 
@@ -222,38 +209,57 @@ public class Client extends JFrame {
         // 获得x,y四方的雷区数
         public int GetSurroundMines(int x,int y){
             int number = 0;
+            int tmpx =0;
+            int tmpy =0;
             // 如果x不合法，返回-1
-            if (x < 0 || x >= column){return -1;}
-            // 如果y不合法，返回-1
-            if (y<0 || y >= rows){return -1;}
             for (int i=-1;i <= 1;i++)
                 for (int j=-1;j <= 1;j++) {
                     // 一个坐标内周围八个方块
-                    if (isMine(x+i,y+j)){
-                        number++;
+                    tmpx = x+i;
+                    tmpy = y+j;
+                    if (isValid(tmpx,tmpy) && isMine(tmpx,tmpy)){
+                       number ++;
                     }
                 }
-            System.out.println("周围雷区数"+number);
+            System.out.println("周围雷数"+number);
             return number;
         }
         // 设置x,y周围的八块地方的雷区显示
-        public void SetMap(int x,int y){
-            int minenum = 0;
+        public void SetSurround(int x,int y){
+              int minenum = 0;
+              int tmpx = 0;
+              int tmpy = 0;
             for (int i=-1;i<=1;i++)
                 for (int j=-1;j<=1;j++){
-                    minenum =GetSurroundMines(x+i,y+j);
-                    if (minenum > 0){
-                        map[x+i][y+j] = minenum;
-                    }else if (minenum ==0){
-                        // 设置
-                        SetMap(x+i,y+j);
-                    }else if (minenum == -1){
-                        // 越界了
-                        continue;
+                    tmpx = x+i;
+                    tmpy = y+j;
+                    if (isValid(tmpx,tmpy)){
+                        if (map[tmpx][tmpy] == -3){
+                            // 没有挖开
+                            minenum =GetSurroundMines(tmpx,tmpy);
+                            if (minenum >0){
+                                // 设置该点的值
+                                map[tmpx][tmpy] =minenum;
+                            }
+                            else if (minenum == 0){
+                                map[tmpx][tmpy] = 0;
+                                System.out.println("X:"+tmpx+"Y:"+tmpy+"周围无雷");
+                                SetSurround(tmpx,tmpy);
+                            }
+
+                        }
                     }
-
-
                 }
+        }
+        // 判断该点是否有效
+        public boolean isValid(int x ,int y){
+            if (x >= 0 && x < rows && y >= 0 && y < column){
+                System.out.println("X"+x+"Y"+y+"该点有效");
+                return true;
+            }
+            //
+            System.out.println("X"+x+"Y"+y+"该点无效");
+            return false;
         }
     }
     public static void main(String[] argv){
