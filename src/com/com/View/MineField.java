@@ -1,23 +1,40 @@
 package com.com.View;
 
+import com.Config.BlockType;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class MineField extends JPanel {
 
     int[][] map; // 游戏的显示地图
     int rows; // 行数
     int column; // 列数
-    public MineField() {
-
-    }
+    BufferedImage flagimg = null; // 旗子图像
+    BufferedImage mineimg = null; // 地雷图像
     public MineField(int[][] map){
         this.map = map; // 外部赋值方式设置地图
+        init();
     }
     private void init(){
         // 初始化
         if (map!=null){
             // 从地图中获得行数和列数
+            rows = map.length;
+            column = map[0].length;
+            try {
+                // 获得图片
+                flagimg = ImageIO.read(new File("flag.png"));
+                mineimg = ImageIO.read(new File("mine.png"));
+            }catch (Exception e){
+                e.printStackTrace();
+                // System.out.println(e.getStackTrace().toString());
+            }
+            // 设置大小
+            this.setSize(new Dimension(column*40, rows*40));
         }
     }
     public void setMap(int[][] map){
@@ -32,6 +49,46 @@ public class MineField extends JPanel {
     public void paint(Graphics g) {
         // 雷区地图绘制
         super.paint(g);
+        g.setColor(Color.black);
+        int rowendpoint = column*40; // 绘制列数的终点
+        int columnendpoint = rows*40; // 绘制行数的终点
+        // 绘制行数
+        for (int i =0;i <= rows; i++  ){
+            g.drawLine(0, 40*i, rowendpoint, 40*i);
+        }
+        // 绘制列数
+        for (int i = 0; i <= column; i++) {
+            g.drawLine(40*i,0,40*i,columnendpoint);
+        }
+        // 绘制雷区各个模块
+        for (int i=0;i< rows;i++)
+            for (int j = 0; j < column; j++){
+                int type = map[i][j];
+                if (type == BlockType.EMPTY){
+                    // 绘制白色的
+                    g.setColor(Color.WHITE);
+                    g.fillRect(j*40+2,i*40+2,37,37);
+                    g.setColor(Color.BLACK);
+                } else if (type == BlockType.FLAG) {
+                    // 绘制旗子
+                    g.drawImage(flagimg,j*40,i*40,this);
+                } else if (type == BlockType.MINE) {
+                    // 绘制地雷
+                    g.drawImage(mineimg,j*40,i*40,this);
+                } else if (type == BlockType.UNDEFINE) {
+                    // 绘制未定义的方块
+                    g.setColor(Color.GRAY);
+                    g.fillRect(j*40+2,i*40+2,37,37);
+                    g.setColor(Color.BLACK);
+                } else {
+                    // 绘制数字
+                    g.setFont(new Font("黑体", Font.BOLD, 20));
+                    String numstr = Integer.toString(type);
+                    g.drawString(numstr, j*40+15, i*40-15+40);
+                }
+
+            }
+
 
 
     }

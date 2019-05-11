@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.CollationElementIterator;
+import com.com.View.MineField;
 
 public class Client extends JFrame {
     private JPanel contentPane;
@@ -21,11 +22,12 @@ public class Client extends JFrame {
     // 计数线程
     CountingThread counter;
     public Client() throws HeadlessException {
+        init(); // 初始化
         contentPane = (JPanel) this.getContentPane();
         contentPane.setLayout(null);
         this.setSize(new Dimension(1000, 1000));
         this.setTitle("客户端");
-        mineField = new MineField();
+
 
         // 时间标签实例化
         showtimeLabel = new JLabel("0000:000");
@@ -37,6 +39,14 @@ public class Client extends JFrame {
         counter = new CountingThread();
         counter.StartCount(); // 开始计数
         counter.start(); // 开启线程
+    }
+    private void init(){
+        // 布雷
+        SetMines();
+        // 设置显示
+        mineField = new MineField(map);
+        // 设置监听
+        mineField.addMouseListener(new MyMouseListenr());
     }
     // 游戏结束
     public void GameOver(){
@@ -61,108 +71,145 @@ public class Client extends JFrame {
         public int getX(){return x1;}
         public int getY(){return y1;}
     }
-
-    // 雷区类
-    class MineField extends JPanel {
-        BufferedImage flagimg = null; // 旗子图像
-        BufferedImage mineimg = null; // 地雷图像
-
-        public MineField() {
-            this.addMouseListener(new MyMouseListenr());
-            this.setSize(new Dimension(column*40, rows*40));
-            this.setBackground(Color.cyan);
-            try{
-                flagimg = ImageIO.read(new File("flag.png"));
-                mineimg = ImageIO.read(new File("mine.png"));
-            }catch (Exception e){
-                System.err.println(e.getStackTrace().toString());
+    // 布雷函数
+    private void SetMines(){
+        map = new int[rows][column]; // 游戏地图
+        mines = new Mine[minenumber]; // 定义雷的实列
+        // 初始化为-3
+        for (int i = 0;i<rows;i++)
+            for (int j =0;j<column;j++){
+                map[i][j] = -3; // 初始化为-3 未知状态
             }
-            SetMines();// 设置雷区
+
+        // 随机数设置雷区。设置每个雷的位置 当雷的数目比地图的数目还多的时候会发生死循环，待解决
+        for (int i = 0;i< minenumber;i++){
+            mines[i] = new Mine();
+            while (true){
+                // 随机产生一个雷的x 和 y
+                int randomX = (int)(0+Math.random()*(rows));
+                int randomY = (int)(0+Math.random()*(column));
+                System.out.println("产生雷区:"+randomX+"|"+randomY);
+                // 如果没有设置过
+                boolean isSet = false;
+                for(int j =0;j<i;j++){
+                    if(mines[j].getX() == randomX && mines[j].getY() == randomY){
+                        // 设置过了,重新产生随机数
+                        isSet = true;
+                    }
+                }
+                if (!isSet){ // 没有设置过则设置
+                    mines[i].setXY(randomX,randomY);
+                    break;
+                }
+                System.out.println("重复雷区:"+randomX+"|"+randomY);
+            }
         }
-        @Override
-        public void paint(Graphics g) {
-            super.paint(g);
-            g.setColor(Color.black);
-            // g.fillOval(10,10,10,10);
-            // g.drawLine(0,0,x,y);
-            int rowendpoint = column*40; // 绘制列数的终点
-            int columnendpoint = rows*40; // 绘制行数的终点
-
-            // 绘制行数
-            for (int i =0;i <= rows; i++  ){
-                g.drawLine(0,40*i,rowendpoint,40*i);
-            }
-            // 绘制列数
-            for (int i = 0; i <= column; i++) {
-                g.drawLine(40*i,0,40*i,columnendpoint);
-            }
-            // 绘制雷区各个模块
-            for(int i = 0;i< rows;i++)
-                for (int j =0; j < column;j++){
-                    int status = map[i][j];
-                    if (status == 0){
-                        // 绘制白色的
-                        g.setColor(Color.white);
-                        g.fillRect(j*40+2,i*40+2,37,37);
-                        g.setColor(Color.black);// 换回黑色
-                    }else if (status == -1){
-                        // 绘制旗子
-                        g.drawImage(flagimg,j*40,i*40,this);
-                    }else if (status == -2){
-                        // 绘制地雷
-                        g.drawImage(mineimg,j*40,i*40,this);
-                    }else if (status == -3){
-                        // 绘制灰色未探索的
-                        g.setColor(Color.gray);
-                        g.fillRect(j*40+2,i*40+2,37,37);
-                        g.setColor(Color.black);
-                    }
-                    else if (status > 0){
-                        // 绘制数字
-                        g.setFont(new Font("黑体",Font.BOLD,20));
-                        String numstr = Integer.toString(status);
-                        g.drawString(numstr,j*40+15,i*40-15+40);
-                    }
-                }
-        }
-        // 布雷函数
-        private void SetMines(){
-            map = new int[rows][column]; // 游戏地图
-            mines = new Mine[minenumber]; // 定义雷的实列
-            // 初始化为-3
-            for (int i = 0;i<rows;i++)
-                for (int j =0;j<column;j++){
-                    map[i][j] = -3; // 初始化为-3 未知状态
-                }
-
-            // 随机数设置雷区。设置每个雷的位置 当雷的数目比地图的数目还多的时候会发生死循环，待解决
-            for (int i = 0;i< minenumber;i++){
-                mines[i] = new Mine();
-                while (true){
-                    // 随机产生一个雷的x 和 y
-                    int randomX = (int)(0+Math.random()*(rows));
-                    int randomY = (int)(0+Math.random()*(column));
-                    System.out.println("产生雷区:"+randomX+"|"+randomY);
-                    // 如果没有设置过
-                    boolean isSet = false;
-                    for(int j =0;j<i;j++){
-                        if(mines[j].getX() == randomX && mines[j].getY() == randomY){
-                            // 设置过了,重新产生随机数
-                            isSet = true;
-                        }
-                    }
-                    if (!isSet){ // 没有设置过则设置
-                        mines[i].setXY(randomX,randomY);
-                        break;
-                    }
-                    System.out.println("重复雷区:"+randomX+"|"+randomY);
-                }
-            }
-            for (int i=0;i< minenumber;i++){
-                System.out.println("地雷数据:"+mines[i].getX()+"|"+mines[i].getY());
-            }
+        for (int i=0;i< minenumber;i++){
+            System.out.println("地雷数据:"+mines[i].getX()+"|"+mines[i].getY());
         }
     }
+
+    // 雷区类
+//    class MineField extends JPanel {
+//        BufferedImage flagimg = null; // 旗子图像
+//        BufferedImage mineimg = null; // 地雷图像
+//
+//        public MineField() {
+//            this.addMouseListener(new MyMouseListenr());
+//            this.setSize(new Dimension(column*40, rows*40));
+//            this.setBackground(Color.cyan);
+//            try{
+//                flagimg = ImageIO.read(new File("flag.png"));
+//                mineimg = ImageIO.read(new File("mine.png"));
+//            }catch (Exception e){
+//                System.err.println(e.getStackTrace().toString());
+//            }
+//            SetMines();// 设置雷区
+//        }
+//        @Override
+//        public void paint(Graphics g) {
+//            super.paint(g);
+//            g.setColor(Color.black);
+//            // g.fillOval(10,10,10,10);
+//            // g.drawLine(0,0,x,y);
+//            int rowendpoint = column*40; // 绘制列数的终点
+//            int columnendpoint = rows*40; // 绘制行数的终点
+//
+//            // 绘制行数
+//            for (int i =0;i <= rows; i++  ){
+//                g.drawLine(0,40*i,rowendpoint,40*i);
+//            }
+//            // 绘制列数
+//            for (int i = 0; i <= column; i++) {
+//                g.drawLine(40*i,0,40*i,columnendpoint);
+//            }
+//            // 绘制雷区各个模块
+//            for(int i = 0;i< rows;i++)
+//                for (int j =0; j < column;j++){
+//                    int status = map[i][j];
+//                    if (status == 0){
+//                        // 绘制白色的
+//                        g.setColor(Color.white);
+//                        g.fillRect(j*40+2,i*40+2,37,37);
+//                        g.setColor(Color.black);// 换回黑色
+//                    }else if (status == -1){
+//                        // 绘制旗子
+//                        g.drawImage(flagimg,j*40,i*40,this);
+//                    }else if (status == -2){
+//                        // 绘制地雷
+//                        g.drawImage(mineimg,j*40,i*40,this);
+//                    }else if (status == -3){
+//                        // 绘制灰色未探索的
+//                        g.setColor(Color.gray);
+//                        g.fillRect(j*40+2,i*40+2,37,37);
+//                        g.setColor(Color.black);
+//                    }
+//                    else if (status > 0){
+//                        // 绘制数字
+//                        g.setFont(new Font("黑体",Font.BOLD,20));
+//                        String numstr = Integer.toString(status);
+//                        g.drawString(numstr,j*40+15,i*40-15+40);
+//                    }
+//                }
+//        }
+//        // 布雷函数
+//        private void SetMines(){
+//            map = new int[rows][column]; // 游戏地图
+//            mines = new Mine[minenumber]; // 定义雷的实列
+//            // 初始化为-3
+//            for (int i = 0;i<rows;i++)
+//                for (int j =0;j<column;j++){
+//                    map[i][j] = -3; // 初始化为-3 未知状态
+//                }
+//
+//            // 随机数设置雷区。设置每个雷的位置 当雷的数目比地图的数目还多的时候会发生死循环，待解决
+//            for (int i = 0;i< minenumber;i++){
+//                mines[i] = new Mine();
+//                while (true){
+//                    // 随机产生一个雷的x 和 y
+//                    int randomX = (int)(0+Math.random()*(rows));
+//                    int randomY = (int)(0+Math.random()*(column));
+//                    System.out.println("产生雷区:"+randomX+"|"+randomY);
+//                    // 如果没有设置过
+//                    boolean isSet = false;
+//                    for(int j =0;j<i;j++){
+//                        if(mines[j].getX() == randomX && mines[j].getY() == randomY){
+//                            // 设置过了,重新产生随机数
+//                            isSet = true;
+//                        }
+//                    }
+//                    if (!isSet){ // 没有设置过则设置
+//                        mines[i].setXY(randomX,randomY);
+//                        break;
+//                    }
+//                    System.out.println("重复雷区:"+randomX+"|"+randomY);
+//                }
+//            }
+//            for (int i=0;i< minenumber;i++){
+//                System.out.println("地雷数据:"+mines[i].getX()+"|"+mines[i].getY());
+//            }
+//        }
+//    }
 
     // 鼠标监听类
     class MyMouseListenr extends MouseAdapter {
