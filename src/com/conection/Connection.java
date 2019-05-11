@@ -19,7 +19,7 @@ public class Connection extends Handle {
     BufferedReader inStream = null; // 输入流，用于接收从服务器返回的数据
     Connection(){
     }
-    Connection(String ip,int port){
+    public Connection(String ip,int port){
         this.ip = ip;
         this.port = port;
     }
@@ -90,7 +90,7 @@ public class Connection extends Handle {
                         // TODO 处理服务器接收到的数据
                         String cmd = inStream.readLine(); // 读取数据
                         System.out.println("服务器命令"+cmd);
-                        recieveData(cmd); // 调用接收数据函数处理消息
+                        // recieveData(cmd); // 调用接收数据函数处理消息
                     }
                 }
             }
@@ -98,9 +98,5 @@ public class Connection extends Handle {
                 e.printStackTrace();
             }
         }
-    }
-
-    public static void main(String[] argv){
-        System.out.println("hello world");
     }
 }
