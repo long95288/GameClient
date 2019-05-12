@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.CollationElementIterator;
-import com.com.View.MineField;
+// import com.com.View.MineField;
 
 public class Client extends JFrame {
     private JPanel contentPane;
@@ -16,7 +16,7 @@ public class Client extends JFrame {
     int[][] map; // 雷区地图
     Mine[] mines; // 地雷数组
     Boolean GameEnd = false; // 游戏结束标记
-    MineField mineField;
+    // MineField mineField;
     JLabel showtimeLabel; // 时间标签,用于显示消耗掉的时间
 
     // 计数线程
@@ -31,7 +31,7 @@ public class Client extends JFrame {
 
         // 时间标签实例化
         showtimeLabel = new JLabel("0000:000");
-        contentPane.add(mineField);
+        // contentPane.add(mineField);
 
         contentPane.add(showtimeLabel); // 添加入组件
         showtimeLabel.setBounds(column*40+100,40,200,50);
@@ -44,9 +44,9 @@ public class Client extends JFrame {
         // 布雷
         SetMines();
         // 设置显示
-        mineField = new MineField(map);
+        // mineField = new MineField(map);
         // 设置监听
-        mineField.addMouseListener(new MyMouseListenr());
+        // mineField.addMouseListener(new MyMouseListenr());
     }
     // 游戏结束
     public void GameOver(){

@@ -1,6 +1,7 @@
 package com.event;
 
-import java.awt.event.MouseAdapter;
+import com.Config.EvenType;
+;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -23,7 +24,7 @@ public class MyMouseListener extends Handle {
                 int type = e.getButton(); // 获得按钮的类型。左键还是右键
                 int clickX = e.getY()/40;
                 int clickY = e.getX()/40;
-                String value = type+"|"+clickX+"|"+clickY;
+                String value =clickX+"|"+clickY+"|"+type;
                 System.out.println("鼠标事件："+value);
                 // 抛出鼠标事件
                 ThrowMouseEvent(value);
@@ -48,7 +49,7 @@ public class MyMouseListener extends Handle {
     private void ThrowMouseEvent(String value){
         // 向职责链发送CLICK事件请求
         if (this.successor != null) {
-            this.successor.handleRequest(new EventRequest("CLICK", value));
+            this.successor.handleRequest(new EventRequest(EvenType.CLICK, value));
         }
     }
     // 获得本类的监听器
