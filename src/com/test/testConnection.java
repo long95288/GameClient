@@ -5,8 +5,7 @@ import com.conection.Connection;
 public class testConnection {
     public static void main(String[] argv){
         System.out.println("Hello World");
-        Connection connection = new Connection("192.168.1.104",8080);
-        connection.connectServer("192.168.1.104",8080);
+        Connection connection = new Connection();
         new Thread(new Runnable() {
             @Override
             public void run() {

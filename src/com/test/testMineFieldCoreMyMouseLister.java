@@ -1,6 +1,7 @@
 package com.test;
 
 import com.Config.Config;
+import com.conection.Connection;
 import com.event.MyMouseListener;
 import com.View.MineField;
 import javax.swing.*;
@@ -33,8 +34,12 @@ public class testMineFieldCoreMyMouseLister {
         // 设置监听器
         mineField.getMineFieldJpanel().addMouseListener(myMouseListener.getListener());
 
+        // 连接
+        Connection connection = new Connection();
         // 设置职责链
         myMouseListener.setSuccessor(core);
         core.setSuccessor(mineField);
+        mineField.setSuccessor(connection);
+        connection.setSuccessor(mineField1);
     }
 }

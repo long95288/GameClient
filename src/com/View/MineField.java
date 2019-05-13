@@ -10,7 +10,6 @@ import javafx.event.EventType;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -22,6 +21,7 @@ public class MineField extends Handle {
     private BufferedImage flagimg = null; // 旗子图像
     private BufferedImage mineimg = null; // 地雷图像
     private innerPanel mineFieldJpanel = null; // 雷区显示面板
+    private Handle ownsuccessor = null;
     // private Graphics g; // 画板
     public MineField(){
         init();
@@ -51,6 +51,12 @@ public class MineField extends Handle {
 //       paint(); // 绘制地图
     }
 
+    @Override
+    public void setSuccessor(Handle successor) {
+        super.setSuccessor(successor);
+        this.ownsuccessor = successor;
+    }
+
     // 设置初始化的地图
     private void setDefaultMap(){
         for (int i=0;i<rows;i++)
@@ -72,6 +78,10 @@ public class MineField extends Handle {
         map[x][y] = value;
         System.out.println("更新地图"+s);
         mineFieldJpanel.repaint(); // 重新绘制
+        // 将更新数据转发到服务器
+        if (this.successor != null){
+            this.successor.handleRequest(new EventRequest(EvenType.SENDDATA,s));
+        }
     }
 
     // 获得地图内容
@@ -127,7 +137,7 @@ public class MineField extends Handle {
     @Override
     public void handleRequest(EventRequest request) {
         // 处理请求 UPDATA
-        System.out.println("MineField收到请求"+request.getEventType()+request.getEventData());
+        //  System.out.println("MineField收到请求"+request.getEventType()+request.getEventData());
         if (request.getEventType().equals(EvenType.UPDATE)){
             String s = request.getEventData();
             updata(s);

@@ -10,6 +10,8 @@ public class Config {
 	private static int minenumber = 2; // 雷的数量
 	private static String mineImagePath ="mine.png";
 	private static String flagImagePath="flag.png";
+	private static String ip = "192.168.1.104";
+	private static int port = 8080;
 
 	public static String getFlagImagePath() {
 		return flagImagePath;
@@ -25,6 +27,14 @@ public class Config {
 
 	public static void setMineImagePath(String mineImagePath) {
 		Config.mineImagePath = mineImagePath;
+	}
+
+	public static int getPort() {
+		return port;
+	}
+
+	public static String getIp() {
+		return ip;
 	}
 
 	Config(){

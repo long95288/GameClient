@@ -121,11 +121,10 @@ public class Core extends Handle {
     // 判断该点是否有效
      private boolean isValid(int x ,int y){
         if (x >= 0 && x < rows && y >= 0 && y < column){
-            System.out.println("X"+x+"Y"+y+"该点有效");
+            // System.out.println("X"+x+"Y"+y+"该点有效");
             return true;
         }
-        //
-        System.out.println("X"+x+"Y"+y+"该点无效");
+        // System.out.println("X"+x+"Y"+y+"该点无效");
         return false;
     }
 
@@ -167,7 +166,7 @@ public class Core extends Handle {
             String data = request.getEventData();
             String[] values = data.split("\\|"); // 分割值
 
-            for (int i=0;i<values.length;i++) System.out.println(values[i]);
+            // for (int i=0;i<values.length;i++) System.out.println(values[i]);
 
             int x = Integer.parseInt(values[0]);
             int y = Integer.parseInt(values[1]);
@@ -187,8 +186,10 @@ public class Core extends Handle {
                 }
             }else if (type == MouseEvent.BUTTON1){
                 // 鼠标左键事件处理
-                System.out.println("左键单击");
-                if (isMine(x,y)){
+                // System.out.println("左键单击");
+
+                // 将要挖开的地区是雷，则结束游戏
+                if (isMine(x,y) && map[x][y] == BlockType.UNDEFINE ){
                     // 触雷，游戏结束
                     System.out.println("你输了");
                     GameOver();
