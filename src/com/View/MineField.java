@@ -21,8 +21,7 @@ public class MineField extends Handle {
     private BufferedImage flagimg = null; // 旗子图像
     private BufferedImage mineimg = null; // 地雷图像
     private innerPanel mineFieldJpanel = null; // 雷区显示面板
-    private Handle ownsuccessor = null;
-    // private Graphics g; // 画板
+
     public MineField(){
         init();
     }
@@ -51,12 +50,6 @@ public class MineField extends Handle {
 //       paint(); // 绘制地图
     }
 
-    @Override
-    public void setSuccessor(Handle successor) {
-        super.setSuccessor(successor);
-        this.ownsuccessor = successor;
-    }
-
     // 设置初始化的地图
     private void setDefaultMap(){
         for (int i=0;i<rows;i++)
@@ -70,7 +63,7 @@ public class MineField extends Handle {
     private void updata(String s){
         // 更新地图信息;
         // 分割value;
-        String[] data = s.split("\\|");
+        String[] data = getFormatData(s);
         // 获得x.y.value;
         int x = Integer.parseInt(data[0]);
         int y = Integer.parseInt(data[1]);
@@ -80,6 +73,8 @@ public class MineField extends Handle {
         mineFieldJpanel.repaint(); // 重新绘制
         // 将更新数据转发到服务器
         if (this.successor != null){
+            //
+            System.out.println("转发"+s);
             this.successor.handleRequest(new EventRequest(EvenType.SENDDATA,s));
         }
     }
@@ -89,50 +84,10 @@ public class MineField extends Handle {
         return mineFieldJpanel;
     }
 
-
-    // 绘制地图
-//    private void paint() {
-//        // 雷区地图绘制
-//        // super.paint(g);
-//        g.setColor(Color.black);
-//        int rowendpoint = column*40; // 绘制列数的终点
-//        int columnendpoint = rows*40; // 绘制行数的终点
-//        // 绘制行数
-//        for (int i =0;i <= rows; i++  ){
-//            g.drawLine(0, 40*i, rowendpoint, 40*i);
-//        }
-//        // 绘制列数
-//        for (int i = 0; i <= column; i++) {
-//            g.drawLine(40*i,0,40*i,columnendpoint);
-//        }
-//        // 绘制雷区各个模块
-//        for (int i=0;i< rows;i++)
-//            for (int j = 0; j < column; j++){
-//                int type = map[i][j];
-//                if (type == BlockType.EMPTY){
-//                    // 绘制白色的
-//                    g.setColor(Color.WHITE);
-//                    g.fillRect(j*40+2,i*40+2,37,37);
-//                    g.setColor(Color.BLACK);
-//                } else if (type == BlockType.FLAG) {
-//                    // 绘制旗子
-//                    g.drawImage(flagimg,j*40,i*40,mineFieldJpanel);
-//                } else if (type == BlockType.MINE) {
-//                    // 绘制地雷
-//                    g.drawImage(mineimg,j*40,i*40,mineFieldJpanel);
-//                } else if (type == BlockType.UNDEFINE) {
-//                    // 绘制未定义的方块
-//                    g.setColor(Color.GRAY);
-//                    g.fillRect(j*40+2,i*40+2,37,37);
-//                    g.setColor(Color.BLACK);
-//                } else {
-//                    // 绘制数字
-//                    g.setFont(new Font("黑体", Font.BOLD, 20));
-//                    String numstr = Integer.toString(type);
-//                    g.drawString(numstr, j*40+15, i*40-15+40);
-//                }
-//            }
-//    }
+    // 获得 格式化后的信息
+    private String[] getFormatData(String s){
+        return s.split("\\|");
+    }
 
     @Override
     public void handleRequest(EventRequest request) {

@@ -5,8 +5,8 @@ package com.Config;
  */
 public class Config {
 	private int[][] map; // 地图
-	private static int rows = 4;  //
-	private static int column = 5; //
+	private static int rows = 6;  //
+	private static int column = 7; //
 	private static int minenumber = 2; // 雷的数量
 	private static String mineImagePath ="mine.png";
 	private static String flagImagePath="flag.png";

@@ -122,15 +122,16 @@ public class Connection extends Handle {
             super.run();
             while (true){
                 try {
-                    Thread.sleep(20);
+                    // 使用30ms间隔发送数据,避免被覆盖
+                    Thread.sleep(30);
                     if (senddatas.size()>0){
                         String s = senddatas.firstElement();// 取第一个元素
-                        // 删除第一个元素
-                        senddatas.remove(0);
-                        System.out.println("取出并删除"+s);
+                        // System.out.println("取出并删除"+s);
                         if (outStream != null){
                             outStream.println(s);
                             outStream.flush();
+                            // 发送之后把该元素删除
+                            senddatas.remove(0);
                         }
                     }
                 }catch (Exception e) {

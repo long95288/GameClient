@@ -176,13 +176,10 @@ public class Core extends Handle {
                 // 鼠标右键事件处理
                 System.out.println("右键点击");
                 if (map[x][y] == BlockType.UNDEFINE){
-                    // 放置旗子 UPDATA x l y l flag
-                    // String outdata = x+"|"+y+"|"+BlockType.FLAG;
                     // 更新雷区请求
                     ThrowUpdateRequest(x,y,BlockType.FLAG);
                     // 同步本地地图数据
                     map[x][y] = BlockType.FLAG;
-                    // this.successor.handleRequest(new EventRequest("UPDATE",outdata));
                 }
             }else if (type == MouseEvent.BUTTON1){
                 // 鼠标左键事件处理
