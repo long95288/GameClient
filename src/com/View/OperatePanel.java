@@ -12,9 +12,9 @@ import java.awt.*;
 * 操作面板类。时间显示框，游戏开始框，对局双方数据
 * */
 public class OperatePanel extends Handle {
-    JPanel content = null; // 内容面板
-    JLabel timeLbl = null; // 时间标签
-    JButton startBtn = null;
+    private JPanel content = null; // 内容面板
+    private JLabel timeLbl = null; // 时间标签
+    private JButton startBtn = null;
     public OperatePanel() {
         init();
     }
