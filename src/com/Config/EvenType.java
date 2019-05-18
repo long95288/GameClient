@@ -6,5 +6,6 @@ public class EvenType {
     public static String CLICK = "CLICK"; // 鼠标监听
     public static String RECIEVEDATA = "RECIEVEDATA"; // 接收数据事件
     public static String SENDDATA = "SENDTATA"; // 发送数据事件
+    public static String LOGIN = "LOGIN";
     EvenType(){}
 }

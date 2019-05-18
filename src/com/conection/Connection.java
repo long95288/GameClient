@@ -73,8 +73,11 @@ public class Connection extends Handle {
         if (request.getEventType().equals(EvenType.SENDDATA)){
             String message = request.getEventData();
             sendData(message); // 发送数据
-        }else
-        {
+        }else if (request.getEventType().equals(EvenType.LOGIN)){
+            // 发送登陆信息
+            System.out.print("登陆信息:"+request.getEventData());
+        }
+        else{
             if (this.successor != null){
                 // 传递请求
                 this.successor.handleRequest(request);

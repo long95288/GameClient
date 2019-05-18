@@ -1,6 +1,7 @@
 package com.test;
 
 import com.Config.Config;
+import com.View.LoginPanel;
 import com.conection.Connection;
 import com.event.MyMouseListener;
 import com.View.MineField;
@@ -11,6 +12,8 @@ import com.event.Core;
 public class testMineFieldCoreMyMouseLister {
     public static void main(String[] argv){
         JFrame mainFram = new JFrame("测试面板");
+        LoginPanel loginPanel = new LoginPanel();
+
 
         Core core = new Core();
         MyMouseListener myMouseListener = new MyMouseListener();
@@ -41,5 +44,6 @@ public class testMineFieldCoreMyMouseLister {
         core.setSuccessor(mineField);
         mineField.setSuccessor(connection);
         connection.setSuccessor(mineField1);
+        loginPanel.setSuccessor(myMouseListener);
     }
 }

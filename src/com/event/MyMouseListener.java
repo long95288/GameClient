@@ -42,7 +42,10 @@ public class MyMouseListener extends Handle {
     }
     @Override
     public void handleRequest(EventRequest request) {
-        // 事件处理，没有
+        // 事件处理，将请求传递下去
+        if (this.successor!=null){
+            this.successor.handleRequest(request);
+        }
     }
 
     // 鼠标事件
