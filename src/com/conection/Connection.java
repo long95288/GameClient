@@ -2,6 +2,7 @@ package com.conection;
 
 import com.Config.Config;
 import com.Config.EvenType;
+import com.JsonData.JsonData;
 import com.event.EventRequest;
 import com.event.Handle;
 
@@ -75,7 +76,7 @@ public class Connection extends Handle {
             sendData(message); // 发送数据
         }else if (request.getEventType().equals(EvenType.LOGIN)){
             // 发送登陆信息
-            System.out.print("登陆信息:"+request.getEventData());
+            sendData(request.getEventData());
         }
         else{
             if (this.successor != null){
@@ -88,6 +89,9 @@ public class Connection extends Handle {
     // 接收数据传递函数
     private void recieveData(String data){
         // 向职责链中发送处理请求,更新面板数据
+        // 获得服务器返回的数据类型
+        String type = JsonData.getServerRespontType(data);
+        // if (type.equa)
         this.successor.handleRequest(new EventRequest(EvenType.UPDATE,data));
     }
     // 接收数据线程类

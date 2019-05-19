@@ -1,6 +1,8 @@
 package com.View;
 
 import com.Config.EvenType;
+import com.JsonData.JsonData;
+import com.JsonData.LoginJson;
 import com.event.EventRequest;
 import com.event.Handle;
 
@@ -116,7 +118,13 @@ public class LoginPanel extends Handle {
     }
     // 登陆请求
     private void throwLoginRequest(String account,String password){
-        String data = account+"|"+password;
+//        String data = account+"|"+password;
+//        LoginJson loginJson = new LoginJson();
+//        loginJson.setAccount(account); // 设置账号
+//        loginJson.setPassword(password); // 设置密码
+        // 生成json字符串
+        String data = JsonData.getLoginJsonData(account,password);
+        System.out.println("登陆的json数据"+data);
         if (this.successor != null){
             this.successor.handleRequest(new EventRequest(EvenType.LOGIN,data));
         }

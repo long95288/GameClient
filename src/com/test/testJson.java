@@ -1,4 +1,5 @@
 package com.test;
+import com.JsonData.JsonData;
 import com.JsonData.LoginJson;
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.annotation.*;
@@ -33,6 +34,10 @@ public class testJson {
             Map<String,Object> map = mapper.readValue(text, new TypeReference<Map<String,Object>>() {
             });
             System.out.print("map="+map);
+            System.out.println("type"+map.get("type"));
+            System.out.println("account:"+map.get("account"));
+            System.out.println("password:"+map.get("password"));
+            System.out.println("type2="+ JsonData.getServerRespontType(text));
             JsonNode node = mapper.readTree(text);
             String account = node.get("account").toString();
             String password = node.get("password").toString();
