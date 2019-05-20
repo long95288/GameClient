@@ -11,6 +11,7 @@ import java.util.Map;
 // json数据处理
 public class JsonData {
     private static ObjectMapper mapper = new ObjectMapper();
+
     public JsonData() {
         init();
     }
@@ -18,7 +19,7 @@ public class JsonData {
         // mapper = new ObjectMapper();
     }
     // 格式化登陆数据
-    public static String getLoginJsonData(String account, String password){
+    public static String formatLoginToJsonData(String account, String password){
         LoginJson loginJson = new LoginJson();
         loginJson.setAccount(account);
         loginJson.setPassword(password);
@@ -30,6 +31,10 @@ public class JsonData {
         }
         return jsonText;
     }
+    // 格式化游戏内的方块更新数据
+    public static String formatTransmitToJsonData(String x,String y,String value){
+        return getJson(new TransmitJson(x,y,value));
+    }
     // 获得服务器返回的数据类型
     public static String getServerRespontType(String data){
         String type = "null";
@@ -37,10 +42,19 @@ public class JsonData {
             Map<String, Object> map = mapper.readValue(data, new TypeReference<Map<String, Object>>() {
             });
             type = map.get("type").toString();
-        }catch (JsonMappingException e){e.printStackTrace();}
-        catch (IOException e){e.printStackTrace();}
-        // return map.get("type").toString();
+        }catch (IOException e){e.printStackTrace();}
         return type;
     }
     //
+    private static String getJson(Object object){
+        String restr = null;
+        try{
+            restr = mapper.writeValueAsString(object);
+        } catch (JsonProcessingException e){
+            e.printStackTrace();
+        } finally {
+            if (restr == null) restr = "ERROR";
+        }
+        return restr;
+    }
 }

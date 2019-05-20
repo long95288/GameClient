@@ -1,10 +1,12 @@
 package com.JsonData;
 
+import com.Config.SendDataType;
+
 import java.rmi.registry.LocateRegistry;
 
 // 登陆的json数据
 public class LoginJson {
-    private String type = "Login";
+    private String type = SendDataType.LOGINDATA; // 登陆数据类型
     private String account ;
     private String password ; // 应该对密码进行hash取值
 
@@ -27,6 +29,4 @@ public class LoginJson {
     public String toString() {
         return "登陆数据"+account+"|"+password;
     }
-
-
 }
