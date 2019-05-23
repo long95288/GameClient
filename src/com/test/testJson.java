@@ -2,12 +2,10 @@ package com.test;
 import com.JsonData.JsonData;
 import com.JsonData.LoginJson;
 import com.fasterxml.jackson.core.*;
-import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.sun.deploy.xml.XMLNode;
 
 import java.io.File;
 import java.util.Map;
@@ -37,7 +35,7 @@ public class testJson {
             System.out.println("type"+map.get("type"));
             System.out.println("account:"+map.get("account"));
             System.out.println("password:"+map.get("password"));
-            System.out.println("type2="+ JsonData.getServerRespontType(text));
+            System.out.println("type2="+ JsonData.getServerResponseType(text));
             JsonNode node = mapper.readTree(text);
             String account = node.get("account").toString();
             String password = node.get("password").toString();

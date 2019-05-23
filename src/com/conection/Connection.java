@@ -2,18 +2,18 @@ package com.conection;
 
 import com.Config.Config;
 import com.Config.EvenType;
+import com.Config.RecieveDataType;
 import com.JsonData.JsonData;
+import com.View.IndexFrame;
+import com.View.LoginPanel;
 import com.event.EventRequest;
 import com.event.Handle;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import java.util.ArrayList;
-import java.util.Queue;
 import java.util.Vector;
 
 // 连接服务器类，
@@ -28,7 +28,8 @@ public class Connection extends Handle {
      //  ArrayList<String> senddatas = new ArrayList<>();
     // Vector 线程安全
     private Vector<String> senddatas = new Vector<>();
-
+    LoginPanel loginPanel; // 引用的登陆组件
+    IndexFrame indexFrame; // 引用的首页组件
     public Connection(){
         init();
     }
@@ -76,6 +77,8 @@ public class Connection extends Handle {
             sendData(message); // 发送数据
         }else if (request.getEventType().equals(EvenType.LOGIN)){
             // 发送登陆信息
+            // 登陆拦截，直接关闭界面
+            // closeLoginPanel();
             sendData(request.getEventData());
         }
         else{
@@ -90,10 +93,27 @@ public class Connection extends Handle {
     private void recieveData(String data){
         // 向职责链中发送处理请求,更新面板数据
         // 获得服务器返回的数据类型
-        String type = JsonData.getServerRespontType(data);
+        String type = JsonData.getServerResponseType(data);
         // if (type.equa)
-        this.successor.handleRequest(new EventRequest(EvenType.UPDATE,data));
+        if (type.equals(RecieveDataType.LOGINSUCCESS)){
+            // 登陆成功,关闭登陆界面,显示主页
+            closeLoginPanel();
+        }else {
+            this.successor.handleRequest(new EventRequest(EvenType.UPDATE, data));
+        }
+
     }
+    // 引入login界面和index界面
+    public void addLoginPanelAndIndexFram(LoginPanel loginPanel, IndexFrame indexFrame){
+        this.loginPanel = loginPanel;
+        this.indexFrame = indexFrame;
+    }
+    // 关闭登陆界面,显示主页面函数
+    private void closeLoginPanel(){
+        loginPanel.delFrame(); // 销毁登陆界面
+        indexFrame.showFrame(); // 显示首界面
+    }
+
     // 接收数据线程类
     class ReceiveDataThread extends Thread {
         @Override

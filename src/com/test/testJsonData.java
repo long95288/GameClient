@@ -7,8 +7,8 @@ public class testJsonData {
         String transmit = JsonData.formatTransmitToJsonData("1","2","-3");
         System.out.println("formatTransmitToJsonData:"+transmit);
 
-        String loginstr = JsonData.formatLoginToJsonData("123456","123456");
-        System.out.println("formatLoginToJsonDat:"+loginstr);
+        String loginStr = JsonData.formatLoginToJsonData("123456","123456");
+        System.out.println("formatLoginToJsonDat:"+loginStr);
 
 
     }

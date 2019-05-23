@@ -14,7 +14,7 @@ public class Client extends JFrame {
     int column  = 3;
     int minenumber = 3; // 雷的数目
     int[][] map; // 雷区地图
-    Mine[] mines; // 地雷数组
+//    Mine[] mines; // 地雷数组
     Boolean GameEnd = false; // 游戏结束标记
     // MineField mineField;
     JLabel showtimeLabel; // 时间标签,用于显示消耗掉的时间
@@ -22,7 +22,7 @@ public class Client extends JFrame {
     // 计数线程
     CountingThread counter;
     public Client() throws HeadlessException {
-        init(); // 初始化
+//        init(); // 初始化
         contentPane = (JPanel) this.getContentPane();
         contentPane.setLayout(null);
         this.setSize(new Dimension(1000, 1000));
@@ -40,75 +40,74 @@ public class Client extends JFrame {
         counter.StartCount(); // 开始计数
         counter.start(); // 开启线程
     }
-    private void init(){
-        // 布雷
-        SetMines();
-        // 设置显示
-        // mineField = new MineField(map);
-        // 设置监听
-        // mineField.addMouseListener(new MyMouseListenr());
-    }
+//    private void init(){
+//        // 布雷
+//        SetMines();
+//        // 设置显示
+//        // mineField = new MineField(map);
+//        // 设置监听
+//        // mineField.addMouseListener(new MyMouseListenr());
+//    }
     // 游戏结束
-    public void GameOver(){
-        // 设置地雷显示
-        for (int i = 0;i < minenumber;i++){
-            map[mines[i].getX()][mines[i].getY()] = -2;
-        }
-
-        // 停止计数
-        counter.EndCount();
-    }
-    // 雷类 一个雷
-    class Mine {
-        private int x1 =0;
-        private int y1 =0;
-        Mine(){
-        }
-        public void setXY(int x,int y){
-            this.x1 = x;
-            this.y1 = y;
-        }
-        public int getX(){return x1;}
-        public int getY(){return y1;}
-    }
+//    public void GameOver(){
+//        // 设置地雷显示
+//        for (int i = 0;i < minenumber;i++){
+//            map[mines[i].getX()][mines[i].getY()] = -2;
+//        }
+//
+//        // 停止计数
+//        counter.EndCount();
+//    }
+//    // 雷类 一个雷
+//    class Mine {
+//        private int x1 =0;
+//        private int y1 =0;
+//        Mine(){
+//        }
+//        public void setXY(int x,int y){
+//            this.x1 = x;
+//            this.y1 = y;
+//        }
+//        public int getX(){return x1;}
+//        public int getY(){return y1;}
+//    }
     // 布雷函数
-    private void SetMines(){
-        map = new int[rows][column]; // 游戏地图
-        mines = new Mine[minenumber]; // 定义雷的实列
-        // 初始化为-3
-        for (int i = 0;i<rows;i++)
-            for (int j =0;j<column;j++){
-                map[i][j] = -3; // 初始化为-3 未知状态
-            }
-
-        // 随机数设置雷区。设置每个雷的位置 当雷的数目比地图的数目还多的时候会发生死循环，待解决
-        for (int i = 0;i< minenumber;i++){
-            mines[i] = new Mine();
-            while (true){
-                // 随机产生一个雷的x 和 y
-                int randomX = (int)(0+Math.random()*(rows));
-                int randomY = (int)(0+Math.random()*(column));
-                System.out.println("产生雷区:"+randomX+"|"+randomY);
-                // 如果没有设置过
-                boolean isSet = false;
-                for(int j =0;j<i;j++){
-                    if(mines[j].getX() == randomX && mines[j].getY() == randomY){
-                        // 设置过了,重新产生随机数
-                        isSet = true;
-                    }
-                }
-                if (!isSet){ // 没有设置过则设置
-                    mines[i].setXY(randomX,randomY);
-                    break;
-                }
-                System.out.println("重复雷区:"+randomX+"|"+randomY);
-            }
-        }
-        for (int i=0;i< minenumber;i++){
-            System.out.println("地雷数据:"+mines[i].getX()+"|"+mines[i].getY());
-        }
-    }
-
+//    private void SetMines(){
+//        map = new int[rows][column]; // 游戏地图
+//        mines = new Mine[minenumber]; // 定义雷的实列
+//        // 初始化为-3
+//        for (int i = 0;i<rows;i++)
+//            for (int j =0;j<column;j++){
+//                map[i][j] = -3; // 初始化为-3 未知状态
+//            }
+//
+//        // 随机数设置雷区。设置每个雷的位置 当雷的数目比地图的数目还多的时候会发生死循环，待解决
+//        for (int i = 0;i< minenumber;i++){
+//            mines[i] = new Mine();
+//            while (true){
+//                // 随机产生一个雷的x 和 y
+//                int randomX = (int)(0+Math.random()*(rows));
+//                int randomY = (int)(0+Math.random()*(column));
+//                System.out.println("产生雷区:"+randomX+"|"+randomY);
+//                // 如果没有设置过
+//                boolean isSet = false;
+//                for(int j =0;j<i;j++){
+//                    if(mines[j].getX() == randomX && mines[j].getY() == randomY){
+//                        // 设置过了,重新产生随机数
+//                        isSet = true;
+//                    }
+//                }
+//                if (!isSet){ // 没有设置过则设置
+//                    mines[i].setXY(randomX,randomY);
+//                    break;
+//                }
+//                System.out.println("重复雷区:"+randomX+"|"+randomY);
+//            }
+//        }
+//        for (int i=0;i< minenumber;i++){
+//            System.out.println("地雷数据:"+mines[i].getX()+"|"+mines[i].getY());
+//        }
+//    }
     // 雷区类
 //    class MineField extends JPanel {
 //        BufferedImage flagimg = null; // 旗子图像
@@ -360,27 +359,27 @@ public class Client extends JFrame {
         }
         @Override
         public void run() {
-            while (true) {
-                if (!gamestop) {
-                    // 游戏开始
-                    long elpased = System.currentTimeMillis() - gameStartTime; // 已经过了多少时间
-                    // 格式化时间为 秒数：毫秒
-                    int milli = (int) (elpased % 1000); // 毫秒数
-                    elpased = elpased / 60;
-                    int second = (int) (elpased / 60);  // 秒数
-                    String showTime = String.format("%02d:%02d", second, milli);
-                    // 设置时间标志
-                    showtimeLabel.setText(showTime);
-                    // System.out.println("时间" + showTime);
-                }
-                try {
-                    sleep(100); // 每100毫秒更新一次
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    System.exit(1);// 退出
-                }
-            }
+//            while (true) {
+//                if (!gamestop) {
+//                    // 游戏开始
+//                    long elpased = System.currentTimeMillis() - gameStartTime; // 已经过了多少时间
+//                    // 格式化时间为 秒数：毫秒
+//                    int milli = (int) (elpased % 1000); // 毫秒数
+//                    elpased = elpased / 60;
+//                    int second = (int) (elpased / 60);  // 秒数
+//                    String showTime = String.format("%02d:%02d", second, milli);
+//                    // 设置时间标志
+//                    showtimeLabel.setText(showTime);
+//                    // System.out.println("时间" + showTime);
+//                }
+//                try {
+//                    sleep(100); // 每100毫秒更新一次
+//
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                    System.exit(1);// 退出
+//                }
+//            }
         }
         // 开始计数
         public void StartCount(){

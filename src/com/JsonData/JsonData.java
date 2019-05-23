@@ -36,8 +36,8 @@ public class JsonData {
         return getJson(new TransmitJson(x,y,value));
     }
     // 获得服务器返回的数据类型
-    public static String getServerRespontType(String data){
-        String type = "null";
+    public static String getServerResponseType(String data){
+        String type = "ERROR";
         try {
             Map<String, Object> map = mapper.readValue(data, new TypeReference<Map<String, Object>>() {
             });
@@ -45,7 +45,7 @@ public class JsonData {
         }catch (IOException e){e.printStackTrace();}
         return type;
     }
-    //
+    // 从对象中获得json的数据
     private static String getJson(Object object){
         String restr = null;
         try{
