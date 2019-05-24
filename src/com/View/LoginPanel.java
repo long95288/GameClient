@@ -140,6 +140,6 @@ public class LoginPanel extends Handle {
     }
     @Override
     public void handleRequest(EventRequest request) {
-
+        if (successor!=null) this.successor.handleRequest(request);
     }
 }

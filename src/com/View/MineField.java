@@ -44,7 +44,7 @@ public class MineField extends Handle {
         }
         mineFieldJpanel = new innerPanel();
         // 设置大小
-        mineFieldJpanel.setSize(new Dimension(column*40, rows*40));
+        mineFieldJpanel.setPreferredSize(new Dimension(column*40, rows*40));
         mineFieldJpanel.setVisible(true);
 //        g = mineFieldJpanel.getGraphics();
 //       paint(); // 绘制地图

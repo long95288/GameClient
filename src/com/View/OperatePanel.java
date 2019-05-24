@@ -23,7 +23,7 @@ public class OperatePanel extends Handle {
     private void init(){
         //
         content = new JPanel();
-        content.setSize(new Dimension(100,100));
+        content.setPreferredSize(new Dimension(100,100));
 
         timeLbl = new JLabel("000:00");
         timeLbl.setBorder(BorderFactory.createLineBorder(Color.BLACK));

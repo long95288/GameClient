@@ -1,6 +1,6 @@
 package com.test;
 
-import com.event.Couter;
+import com.event.Counter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +24,7 @@ public class testCounter {
         container.add(startTimeBtn);
         frame.setVisible(true);
 
-        Couter couter = new Couter();
+        Counter couter = new Counter();
         couter.setShowTimeLabel(jLabel);
         couter.start(); // 开启线程
         // couter.StartCount();

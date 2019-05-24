@@ -2,13 +2,20 @@ package com.test;
 
 import com.View.IndexFrame;
 import com.View.LoginPanel;
+import com.View.MineField;
+import com.View.OperatePanel;
 import com.conection.Connection;
 
 public class testLoginIndexConnection {
     public static void main(String[] argv){
+        MineField ownMineField = new MineField();
+        MineField opponentMineField = new MineField();
+        OperatePanel operatePanel = new OperatePanel();
         // 首页
-        IndexFrame indexFrame = new IndexFrame();
-        // indexFrame.showFrame();
+        IndexFrame indexFrame = new IndexFrame(ownMineField.getMineFieldJpanel(),
+                operatePanel.getContent(),
+                opponentMineField.getMineFieldJpanel());
+        indexFrame.showFrame();
         // 登陆面板
         LoginPanel loginPanel = new LoginPanel();
         loginPanel.showFrame();
