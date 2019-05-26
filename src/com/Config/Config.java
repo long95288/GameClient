@@ -75,4 +75,25 @@ public class Config {
 	    // 根据雷区的数据来初始化面板
 	    return new Dimension(column*40*2+200,rows*40+130);
     }
+    // 控制面板的宽和高
+    public static Dimension getOperatePanelSize(){
+	    return new Dimension(100,200);
+    }
+    // 控制面板的组件大小
+    public static Dimension getOperateComponentSize(){
+	    // 宽为100 高为40
+	    return new Dimension(100,40);
+    }
+    // 获得的大标签
+    public static Font getLabelFont(){
+	    return new Font("黑体",Font.BOLD,24);
+    }
+    // 获得居中的point
+    public static Point getCenterPoint(double frameWidth,double frameHeight){
+	    Toolkit toolkit = Toolkit.getDefaultToolkit();
+	    Dimension screenSize = toolkit.getScreenSize();
+	    double screenWidth = screenSize.getWidth();
+	    double screenHeight = screenSize.getHeight();
+	    return new Point((int)(screenWidth-frameWidth)/2,(int)(screenHeight-frameHeight)/2);
+    }
 }

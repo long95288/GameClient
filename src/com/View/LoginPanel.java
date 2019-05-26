@@ -2,6 +2,7 @@ package com.View;
 
 import com.Config.EvenType;
 import com.JsonData.JsonData;
+import com.Utils.SecurityTools;
 import com.event.EventRequest;
 import com.event.Handle;
 
@@ -88,10 +89,13 @@ public class LoginPanel extends Handle {
                 {
                     String account = accountTextField.getText();
                     String password = new String(passwordTextFile.getPassword());
+                    // 对密码加密MD5 hash取值
+                    String digest = SecurityTools.getPassWordDigest(password);
                     System.out.println("账号:"+account);
                     System.out.println("密码:"+password);
+                    System.out.println("密码hash:"+digest);
                     // 抛出登陆请求
-                    throwLoginRequest(account,password);
+                    throwLoginRequest(account,digest);
                 }
             }
             @Override

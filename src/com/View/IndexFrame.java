@@ -40,8 +40,8 @@ public class IndexFrame {
     // 设置组件的样式的文字
     private void  setComponentsStyle(){
         mainFrame.setTitle("游戏界面");
-        mainFrame.setLocation(new Point(100,100));
         mainFrame.setSize(Config.getIndexFrameSize());
+        mainFrame.setLocation(Config.getCenterPoint(mainFrame.getWidth(),mainFrame.getHeight()));
 //        mainFrame.setResizable(false);
 
         // 标签字体

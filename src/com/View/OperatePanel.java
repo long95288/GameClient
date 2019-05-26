@@ -1,5 +1,6 @@
 package com.View;
 
+import com.Config.Config;
 import com.event.EventRequest;
 import com.event.Handle;
 import javafx.scene.text.TextAlignment;
@@ -14,8 +15,11 @@ import java.awt.*;
 * */
 public class OperatePanel extends Handle {
     private JPanel content = null; // 内容面板
+//    private JLabel flagIcon = null;
+    private JLabel flagNumbersLbl = null; // 旗子数目标签
     private JLabel timeLbl = null; // 时间标签
     private JButton startBtn = null;
+
     public OperatePanel() {
         init();
     }
@@ -24,21 +28,34 @@ public class OperatePanel extends Handle {
     private void init(){
         //
         content = new JPanel();
-        content.setPreferredSize(new Dimension(100,100));
+        content.setPreferredSize(Config.getOperatePanelSize());
 
         timeLbl = new JLabel("000");
         timeLbl.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         timeLbl.setForeground(Color.RED); // 设置文字颜色
         timeLbl.setFont(new Font("黑体",Font.BOLD,28));
         timeLbl.setHorizontalAlignment(SwingConstants.CENTER); //居中
+        timeLbl.setPreferredSize(Config.getOperateComponentSize());
+
+//        flagIcon = new JLabel("dsfsfs");
+//        flagIcon.setIcon(new ImageIcon("flag.png"));
+
+        flagNumbersLbl = new JLabel(String.valueOf(Config.getMineNumber()));
+        flagNumbersLbl.setIcon(new ImageIcon(Config.getFlagImagePath()));
+        flagNumbersLbl.setFont(Config.getLabelFont());
+        flagNumbersLbl.setPreferredSize(Config.getOperateComponentSize());
 
         startBtn = new JButton("开始匹配");
+        startBtn.setPreferredSize(Config.getOperateComponentSize());
 
-        content.setLayout(null);
+//        content.setLayout(null);
+//        content.add(flagIcon);
+        content.add(flagNumbersLbl);
         content.add(timeLbl);
-        timeLbl.setBounds(0,0,100,40);
+
+//        timeLbl.setBounds(0,0,100,40);
         content.add(startBtn);
-        startBtn.setBounds(0,50,100,40);
+//        startBtn.setBounds(0,50,100,40);
     }
 
     // 获得内容面板
