@@ -23,7 +23,7 @@ public class Core extends Handle {
         // Config config = new Config();
         rows = Config.getRows(); // 获得行数
         column = Config.getColumn(); // 获得列数
-        minenumber = Config.getMinenumber(); // 获得雷的数目
+        minenumber = Config.getMineNumber(); // 获得雷的数目
         // 设置地雷
         SetMines();
     }

@@ -1,5 +1,7 @@
 package com.Config;
 
+import java.awt.*;
+
 /*
  * 配置类
  */
@@ -65,7 +67,12 @@ public class Config {
 		return rows;
 	}
 	// 获得雷的数目
-	public static int getMinenumber() {
+	public static int getMineNumber() {
 		return minenumber;
 	}
+	// 获得首页面板的宽和高的
+    public static Dimension getIndexFrameSize(){
+	    // 根据雷区的数据来初始化面板
+	    return new Dimension(column*40*2+200,rows*40+130);
+    }
 }

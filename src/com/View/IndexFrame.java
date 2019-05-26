@@ -1,5 +1,7 @@
 package com.View;
 
+import com.Config.Config;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -39,12 +41,12 @@ public class IndexFrame {
     private void  setComponentsStyle(){
         mainFrame.setTitle("游戏界面");
         mainFrame.setLocation(new Point(100,100));
-        mainFrame.setSize(new Dimension(540,400));
+        mainFrame.setSize(Config.getIndexFrameSize());
 //        mainFrame.setResizable(false);
 
         // 标签字体
         Font labelFont = new Font("宋体",Font.BOLD,24);
-        Dimension labelSize = new Dimension(100,40); // 标签大小
+        Dimension labelSize = new Dimension(Config.getColumn()*40,40); // 标签大小
 
         ownId.setFont(labelFont);
         ownId.setText("我方:");
@@ -54,11 +56,13 @@ public class IndexFrame {
         opponentId.setText("对方:");
         opponentId.setPreferredSize(labelSize);
 
+        Dimension vsLabelSize = new Dimension(100,40);
         Font vsLabelFont = new Font("黑体",Font.BOLD,28);
         vsLabel.setForeground(Color.RED); // 设置文字颜色
         vsLabel.setFont(vsLabelFont);
         vsLabel.setText("VS");
-        vsLabel.setPreferredSize(labelSize);
+        vsLabel.setPreferredSize(vsLabelSize);
+        vsLabel.setHorizontalAlignment(SwingConstants.CENTER);  // 居中
     }
     // 设置组件的布局
     private void setComponentLayout(){
