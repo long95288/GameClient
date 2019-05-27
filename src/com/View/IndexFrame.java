@@ -4,6 +4,8 @@ import com.Config.Config;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 
 // 首页类,主要负责显示雷区和操作板等
 public class IndexFrame {
@@ -26,6 +28,7 @@ public class IndexFrame {
         instanceComponents(); // 实例化组件
         setComponentsStyle(); // 设置组件样式
         setComponentLayout(); // 设置组件布局
+        setComponentEventListener(); // 设置组件的时间监听
     }
 
     // 实例化组件
@@ -74,6 +77,18 @@ public class IndexFrame {
         container.add(operationPanel);
         container.add(opponentMineFieldPanel);
     }
+    // 设置组件的监听
+    private void setComponentEventListener(){
+        // TODO 为页面的关闭设置确定的逻辑
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        mainFrame.addWindowStateListener(new WindowStateListener() {
+            @Override
+            public void windowStateChanged(WindowEvent e) {
+                System.out.println("窗口事件"+e.getNewState());
+            }
+        });
+    }
+
     // 设置本人id
     public void setOwnId(String ownId) {
         this.ownId.setText(ownId);
