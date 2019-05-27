@@ -16,7 +16,7 @@ public class LoginPanel extends Handle {
 
     private JFrame loginfm = null;
     private Container container = null;
-    private JLabel accoutLabel = null;
+    private JLabel accountLabel = null;
     private JLabel passwordLabel = null;
     private JTextField accountTextField = null;
     private JPasswordField passwordTextFile = null;
@@ -36,7 +36,7 @@ public class LoginPanel extends Handle {
     private void instanceComponent(){
         loginfm = new JFrame();
         container = loginfm.getContentPane();
-        accoutLabel = new JLabel();
+        accountLabel = new JLabel();
         passwordLabel = new JLabel();
         accountTextField = new JTextField();
         passwordTextFile = new JPasswordField();
@@ -54,9 +54,9 @@ public class LoginPanel extends Handle {
         Dimension labelSize = new Dimension(100,40);
         Dimension textFieldSize = new Dimension(200,40);
 
-        accoutLabel.setText("账号:");
-        accoutLabel.setFont(lableFont);
-        accoutLabel.setPreferredSize(labelSize);
+        accountLabel.setText("账号:");
+        accountLabel.setFont(lableFont);
+        accountLabel.setPreferredSize(labelSize);
         passwordLabel.setText("密码:");
         passwordLabel.setFont(lableFont);
         passwordLabel.setPreferredSize(labelSize);
@@ -74,7 +74,7 @@ public class LoginPanel extends Handle {
     }
     // 添加组件
     private void addComponent(){
-        container.add(accoutLabel);
+        container.add(accountLabel);
         container.add(accountTextField);
         container.add(passwordLabel);
         container.add(passwordTextFile);
@@ -121,15 +121,12 @@ public class LoginPanel extends Handle {
     }
     // 登陆请求
     private void throwLoginRequest(String account,String password){
-//        String data = account+"|"+password;
-//        LoginJson loginJson = new LoginJson();
-//        loginJson.setAccount(account); // 设置账号
-//        loginJson.setPassword(password); // 设置密码
         // 生成json字符串
         String data = JsonData.formatLoginToJsonData(account,password);
         System.out.println("登陆的json数据"+data);
         if (this.successor != null){
-            this.successor.handleRequest(new EventRequest(EvenType.LOGIN,data));
+            // 产生一个发送数据的请求
+            this.successor.handleRequest(new EventRequest(EvenType.SENDDATA,data));
         }
         //
         System.out.print("登入事件没有处理者");
