@@ -23,7 +23,7 @@ public class testLoginIndexConnection {
         // 连接模块
         Connection connection = new Connection();
         // 设置操作对象
-        connection.addLoginPanelAndIndexFram(loginPanel,indexFrame);
+        connection.addLoginPanelAndIndexFrame(loginPanel,indexFrame);
 
         // 设置职责链 login的事件让connection处理
         loginPanel.setSuccessor(connection);

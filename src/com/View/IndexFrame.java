@@ -4,6 +4,7 @@ import com.Config.Config;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 
@@ -81,10 +82,18 @@ public class IndexFrame {
     private void setComponentEventListener(){
         // TODO 为页面的关闭设置确定的逻辑
         mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        mainFrame.addWindowStateListener(new WindowStateListener() {
+        mainFrame.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowStateChanged(WindowEvent e) {
-                System.out.println("窗口事件"+e.getNewState());
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                int n = JOptionPane.showConfirmDialog(mainFrame,"是否退出游戏","提示",JOptionPane.YES_NO_OPTION);
+                if (n == JOptionPane.YES_OPTION){
+                    // 确认退出
+                    // System.out.println("关闭窗口");
+                    mainFrame.dispose();
+                    System.exit(0);
+                }
+              // 选择No不做任何处理
             }
         });
     }

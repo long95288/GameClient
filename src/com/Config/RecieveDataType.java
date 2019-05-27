@@ -2,7 +2,8 @@ package com.Config;
 
 // 这是收到服务器返回的数据类型
 public class RecieveDataType {
-    public static String LOGINSUCCESS ="LOGINSUCCESS";
-    public static String LOGINFAILUE ="LOGINFAILUE";
+    public static String LOGINSUCCESS ="LOGINSUCCESS"; // 登陆成功
+    public static String LOGINFAILUE ="LOGINFAILUE"; // 登陆失败
+    public static String UPDATEOPPONENTGAMEMAP = "UPDATEOPPONENTMAP"; // 更新对方地图请求
 
 }

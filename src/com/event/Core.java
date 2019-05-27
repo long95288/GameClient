@@ -11,7 +11,7 @@ public class Core extends Handle {
     private int[][] map;
     private int rows;
     private int column;
-    private int minenumber; // 雷的数量
+    private int mineNumber; // 雷的数量
     private Mine[] mines; // 雷的实例
     public Core(){
         // this.map = map;
@@ -23,7 +23,7 @@ public class Core extends Handle {
         // Config config = new Config();
         rows = Config.getRows(); // 获得行数
         column = Config.getColumn(); // 获得列数
-        minenumber = Config.getMineNumber(); // 获得雷的数目
+        mineNumber = Config.getMineNumber(); // 获得雷的数目
         // 设置地雷
         SetMines();
     }
@@ -31,14 +31,14 @@ public class Core extends Handle {
     // 设置地雷
     private void SetMines(){
         map = new int[rows][column]; // 游戏地图
-        mines = new Mine[minenumber]; // 定义雷的实列
+        mines = new Mine[mineNumber]; // 定义雷的实列
         // 初始化为-3
         for (int i = 0;i<rows;i++)
             for (int j =0;j<column;j++){
                 map[i][j] = BlockType.UNDEFINE; // 初始化为未定义状态
             }
         // 随机数设置雷区。设置每个雷的位置 当雷的数目比地图的数目还多的时候会发生死循环，待解决
-        for (int i = 0;i< minenumber;i++){
+        for (int i = 0; i< mineNumber; i++){
             mines[i] = new Mine();
             while (true){
                 // 随机产生一个雷的x 和 y
@@ -60,7 +60,7 @@ public class Core extends Handle {
                 // System.out.println("重复雷区:"+randomX+"|"+randomY);
             }
         }
-        for (int i=0;i< minenumber;i++){
+        for (int i = 0; i< mineNumber; i++){
             System.out.println("地雷数据:"+mines[i].getX()+"|"+mines[i].getY());
         }
     }
@@ -84,7 +84,7 @@ public class Core extends Handle {
 
     // 判断坐标x,y是不是雷
     private boolean isMine(int x,int y){
-            for (int i =0 ;i < minenumber;i++){
+            for (int i = 0; i < mineNumber; i++){
                 if ((mines[i].getX() == x) && (mines[i].getY() == y)){
                     return true; // 当前坐标是雷
                 }
@@ -143,7 +143,7 @@ public class Core extends Handle {
                     number --;
                 }
             }
-        if (number <= minenumber){
+        if (number <= mineNumber){
             // 当剩余的方块数小于等于地雷数，便可以判断为游戏结束
             return true;
         }
@@ -152,11 +152,12 @@ public class Core extends Handle {
 
     // 向职责链发送UPDATE请求
     private void ThrowUpdateRequest(int x,int y,int value){
-        String requestdata = setFormatData(x,y,value);
+        // 更新本人雷区游戏数据请求，
+        String requestData = setFormatData(x,y,value);
         // this.successor.handleRequest(new EventRequest());
         // 同步本地数据
         map[x][y] = value;
-        this.successor.handleRequest(new EventRequest(EvenType.UPDATE,requestdata));
+        this.successor.handleRequest(new EventRequest(EvenType.UPDATE,requestData));
     }
 
     @Override
@@ -242,7 +243,7 @@ public class Core extends Handle {
 
     // 游戏结束
     private void GameOver(){
-        for (int i = 0; i < minenumber; i ++){
+        for (int i = 0; i < mineNumber; i ++){
             // 设置地图
             // map[mines[i].getX()][mines[i].getY()] = BlockType.MINE;
             ThrowUpdateRequest(mines[i].getX(),mines[i].getY(),BlockType.MINE);
