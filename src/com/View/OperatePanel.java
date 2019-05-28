@@ -4,11 +4,8 @@ import com.Config.Config;
 import com.Config.EvenType;
 import com.event.EventRequest;
 import com.event.Handle;
-import javafx.scene.text.TextAlignment;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.BorderUIResource;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -81,8 +78,25 @@ public class OperatePanel extends Handle {
         return content;
     }
 
+    // 获得时间标签
+    public JLabel getTimeLbl() {
+        return timeLbl;
+    }
+
+    // 设置旗子数目
+    public void setFlagNumbersLbl(String flags){
+        flagNumbersLbl.setText(flags);
+    }
+
+//    // 设置时间标签
+//    public void setTimeLbl(String time) {
+//        timeLbl.setText(time);
+//    }
+
     @Override
     public void handleRequest(EventRequest request) {
-
+        if (successor!=null) {
+            successor.handleRequest(request);
+        }
     }
 }

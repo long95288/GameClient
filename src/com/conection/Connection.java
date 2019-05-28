@@ -106,19 +106,25 @@ public class Connection extends Handle {
         String type = JsonData.getServerResponseType(data);
         // if (type.equa)
         if (type.equals(RecieveDataType.LOGINSUCCESS)){
+            // 抛出登陆成功请求
+            throwLoginSuccessRequest(data);
             // 登陆成功,关闭登陆界面,显示主页
-            closeLoginPanel();
+//            closeLoginPanel();
         }else if(type.equals(RecieveDataType.UPDATEOPPONENTGAMEMAP)){
-            // 接收到更新对方地图数据请求
-            if (this.successor!=null){
-                this.successor.handleRequest(new EventRequest(EvenType.UPDATE, data));
-            }
-            else{
-                System.out.println("没有successor传递请求");
-            }
+//            // 接收到更新对方地图数据请求
+            throwUpdateRequest(data);
         }
 
     }
+    // 抛出登陆请求
+    private void throwLoginSuccessRequest(String date){
+        this.successor.handleRequest(new EventRequest(EvenType.LOGINSUCCESS,date));
+    }
+    // 抛出更新对方雷区请求
+    private void throwUpdateRequest(String data){
+        this.successor.handleRequest(new EventRequest(EvenType.UPDATE,data));
+    }
+
     // 引入login界面和index界面
     public void addLoginPanelAndIndexFrame(LoginPanel loginPanel, IndexFrame indexFrame){
         this.loginPanel = loginPanel;

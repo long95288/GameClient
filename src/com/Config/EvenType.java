@@ -7,5 +7,9 @@ public class EvenType {
     public static String RECIEVEDATA = "RECIEVEDATA"; // 接收数据事件
     public static String SENDDATA = "SENDTATA"; // 发送数据事件
     public static String LOGIN = "LOGIN";
+    public static String LOGINSUCCESS = "LOGINSUCCESS"; // 登入成功事件类型
+    public static String LOGINFAILURE = "LOGINFAILURE"; // 登陆失败
+    public static String MATCHSUCCESS = "MATCHSUCCESS"; // 匹配成功
+
     EvenType(){}
 }

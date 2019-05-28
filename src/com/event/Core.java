@@ -150,14 +150,16 @@ public class Core extends Handle {
         return false;
     }
 
-    // 向职责链发送UPDATE请求
+    // 向职责链发送UPDATE请求和SENDDATA请求
     private void ThrowUpdateRequest(int x,int y,int value){
         // 更新本人雷区游戏数据请求，
         String requestData = setFormatData(x,y,value);
-        // this.successor.handleRequest(new EventRequest());
         // 同步本地数据
         map[x][y] = value;
+        // 发送更新雷区请求
         this.successor.handleRequest(new EventRequest(EvenType.UPDATE,requestData));
+        // 向服务器发送更新的数据
+        this.successor.handleRequest(new EventRequest(EvenType.SENDDATA,requestData));
     }
 
     @Override
@@ -166,8 +168,6 @@ public class Core extends Handle {
         if (request.getEventType().equals(EvenType.CLICK)){
             String data = request.getEventData();
             String[] values = data.split("\\|"); // 分割值
-
-            // for (int i=0;i<values.length;i++) System.out.println(values[i]);
 
             int x = Integer.parseInt(values[0]);
             int y = Integer.parseInt(values[1]);
