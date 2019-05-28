@@ -1,5 +1,6 @@
 package com.View;
 
+import com.Config.Config;
 import com.Config.EvenType;
 import com.JsonData.JsonData;
 import com.Utils.SecurityTools;
@@ -46,7 +47,7 @@ public class LoginPanel extends Handle {
     private void setComponentStyle(){
         loginfm.setTitle("登录游戏");
         loginfm.setSize(new Dimension(400,300));
-        loginfm.setLocation(100,100);
+        loginfm.setLocation(Config.getCenterPoint(loginfm.getWidth(),loginfm.getHeight()));
         loginfm.setResizable(false); // 关闭最大化功能
         container.setLayout(new FlowLayout());
 
