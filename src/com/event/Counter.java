@@ -1,11 +1,14 @@
 package com.event;
 
+import com.Store.Store;
+
 import javax.swing.*;
 
 public class Counter extends Thread{
     private boolean gameStop = true;
     private long gameStartTime = 0;
     private JLabel showTimeLabel = null;
+    private JLabel flagLabel = null;
     private int gameTime = 0; // 游戏时间
     public Counter() {
         // this.start();
@@ -15,6 +18,10 @@ public class Counter extends Thread{
     public void setShowTimeLabel(JLabel showTimeLabel){
         this.showTimeLabel = showTimeLabel;
     }
+    // 引用旗子的标志
+//    public void setFlagLabel(JLabel flagLabel){
+//        this.flagLabel = flagLabel;
+//    }
 
     // 设置开始计数
     public void StartCount(){
@@ -47,11 +54,11 @@ public class Counter extends Thread{
                     showTimeLabel.setText(showTime);
                 } else {
                     // 未设置显示组件
-                    System.out.println("未设置显示时间组件");
+                    System.out.println("未设置显示时间");
                 }
             }
             try {
-                sleep(1000); // 每500毫秒更新一次
+                sleep(1000); // 每1秒更新一次
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.exit(1);// 退出

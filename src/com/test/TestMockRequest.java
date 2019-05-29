@@ -15,6 +15,8 @@ public class TestMockRequest extends Handle {
     private JFrame jFrame;
     private JButton loginSuccessBtn; // 提供登陆请求
     private JButton matchSuccessBtn; // 配置成功请求
+    private JButton gameOverBtn; // 游戏结束请求
+
     private Container container;
     public TestMockRequest() {
         init();
@@ -34,6 +36,9 @@ public class TestMockRequest extends Handle {
         matchSuccessBtn = new JButton("匹配成功请求");
         matchSuccessBtn.setPreferredSize(Config.getOperateComponentSize());
 
+        gameOverBtn = new JButton("游戏结束请求");
+        gameOverBtn.setPreferredSize(Config.getOperateComponentSize());
+
 
         addComponents();
         setListener(); // 设置请求
@@ -44,6 +49,7 @@ public class TestMockRequest extends Handle {
     private void addComponents(){
         container.add(loginSuccessBtn);
         container.add(matchSuccessBtn);
+        container.add(gameOverBtn);
     }
 
 
@@ -53,7 +59,7 @@ public class TestMockRequest extends Handle {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                String data ="dd";
+                String data ="12345678";
                 throwRequest(new EventRequest(EvenType.LOGINSUCCESS,data));
             }
         });
@@ -63,8 +69,18 @@ public class TestMockRequest extends Handle {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                String data = "匹配成功";
+                String data = "87654321";
                 throwRequest(new EventRequest(EvenType.MATCHSUCCESS,data));
+            }
+        });
+
+        // 游戏结束请求
+        gameOverBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                String data ="defeat";
+                throwRequest(new EventRequest(EvenType.GAMEOVER,data));
             }
         });
 

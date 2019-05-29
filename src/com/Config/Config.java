@@ -1,5 +1,6 @@
 package com.Config;
 
+import javax.swing.*;
 import java.awt.*;
 
 /*
@@ -14,6 +15,7 @@ public class Config {
 	private static String flagImagePath="flag.png";
 	private static String ip = "100.69.41.173";
 	private static int port = 8080;
+	public static boolean debug = false; // 调试标记,
 
 	public static String getFlagImagePath() {
 		return flagImagePath;
@@ -43,15 +45,6 @@ public class Config {
 		init();
 	}
 	private void init(){
-		// rows = 5; // 5行4列
-		// column = 4; //
-		//minenumber = 3; // 3个雷
-		// map = new int[rows][column]; // 实例
-//		for (int i=0;i<rows;i++)
-//			for (int j=0;j<column;j++){
-//				// 默认map的数据为UNDEFINE
-//				map[i][j] = BlockType.UNDEFINE;
-//			}
 	}
 
 	public int[][] getMap() {
@@ -95,5 +88,9 @@ public class Config {
 	    double screenWidth = screenSize.getWidth();
 	    double screenHeight = screenSize.getHeight();
 	    return new Point((int)(screenWidth-frameWidth)/2,(int)(screenHeight-frameHeight)/2);
+    }
+    // 获得id前面的图片
+    public static ImageIcon getIdImg(){
+	    return new ImageIcon("idImg.png");
     }
 }

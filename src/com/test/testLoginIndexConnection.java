@@ -12,9 +12,7 @@ public class testLoginIndexConnection {
         MineField opponentMineField = new MineField();
         OperatePanel operatePanel = new OperatePanel();
         // 首页
-        IndexFrame indexFrame = new IndexFrame(ownMineField.getMineFieldJpanel(),
-                operatePanel.getContent(),
-                opponentMineField.getMineFieldJpanel());
+        IndexFrame indexFrame = new IndexFrame(ownMineField,operatePanel,opponentMineField);
         indexFrame.showFrame();
         // 登陆面板
         LoginPanel loginPanel = new LoginPanel();
@@ -23,7 +21,6 @@ public class testLoginIndexConnection {
         // 连接模块
         Connection connection = new Connection();
         // 设置操作对象
-        connection.addLoginPanelAndIndexFrame(loginPanel,indexFrame);
 
         // 设置职责链 login的事件让connection处理
         loginPanel.setSuccessor(connection);

@@ -4,8 +4,8 @@ import com.Config.Config;
 import com.Config.EvenType;
 import com.Config.RecieveDataType;
 import com.JsonData.JsonData;
-import com.View.IndexFrame;
-import com.View.LoginPanel;
+import com.JsonData.UpdateGameBlockJson;
+import com.View.MineField;
 import com.event.EventRequest;
 import com.event.Handle;
 
@@ -31,8 +31,6 @@ public class Connection extends Handle {
      //  ArrayList<String> senddatas = new ArrayList<>();
     // Vector 线程安全
     private Vector<String> sendDatas = new Vector<>();
-    private LoginPanel loginPanel; // 引用的登陆组件
-    private IndexFrame indexFrame; // 引用的首页组件
     public Connection(){
         init();
     }
@@ -42,12 +40,6 @@ public class Connection extends Handle {
         // 连接服务器
         connectServer();
     }
-//    // 设置ip函数
-//    private void setIp(String ip){
-//        this.ip = ip;
-//    }
-//    // 设置port函数
-//    private void setPort(int port){this.port = port;}
     private void connectServer(){
         try{
             socket = new Socket(ip,port);
@@ -86,13 +78,7 @@ public class Connection extends Handle {
         if (request.getEventType().equals(EvenType.SENDDATA)){
             String message = request.getEventData();
             sendData(message); // 发送数据
-        }else if (request.getEventType().equals(EvenType.LOGIN)){
-            // 发送登陆信息
-            // 登陆拦截，直接关闭界面
-            // closeLoginPanel();
-            sendData(request.getEventData());
-        }
-        else{
+        }else{
             if (this.successor != null){
                 // 传递请求
                 this.successor.handleRequest(request);
@@ -113,32 +99,45 @@ public class Connection extends Handle {
         if (type.equals(RecieveDataType.LOGINSUCCESS)){
             // 抛出登陆成功请求
             throwLoginSuccessRequest(data);
-            // 登陆成功,关闭登陆界面,显示主页
-//            closeLoginPanel();
-        }else if(type.equals(RecieveDataType.UPDATEOPPONENTGAMEMAP)){
+
+        }else if(type.equals(RecieveDataType.UPDATEGAMEBLOCK)){
 //            // 接收到更新对方地图数据请求
             throwUpdateRequest(data);
+        }else if (type.equals(RecieveDataType.MATCHSUCCESS)){
+            // 匹配成功请求
+            throwMatchSuccessRequest(data);
         }
 
     }
-    // 抛出登陆请求
+    // 抛出登陆成功请求
     private void throwLoginSuccessRequest(String date){
-        this.successor.handleRequest(new EventRequest(EvenType.LOGINSUCCESS,date));
+        try {
+            String value = JsonData.getJsonMap(date).get("value").toString();
+            this.successor.handleRequest(new EventRequest(EvenType.LOGINSUCCESS, value));
+        }catch (IOException e){e.printStackTrace();}
     }
     // 抛出更新对方雷区请求
     private void throwUpdateRequest(String data){
-        this.successor.handleRequest(new EventRequest(EvenType.UPDATE,data));
+        // 获得x,y,value的值
+       try {
+           UpdateGameBlockJson updateGameBlockJson = JsonData.getUpdateGameBlockObject(data);
+           int x = Integer.parseInt(updateGameBlockJson.getX());
+           int y = Integer.parseInt(updateGameBlockJson.getY());
+           int value = Integer.parseInt(updateGameBlockJson.getValue());
+           String update = x+"|"+y+"|"+value;
+           this.successor.handleRequest(new EventRequest(EvenType.UPDATE, update));
+       }catch (IOException e){
+           System.err.println("IO错误"+e.getMessage());
+       }
     }
 
-    // 引入login界面和index界面
-    public void addLoginPanelAndIndexFrame(LoginPanel loginPanel, IndexFrame indexFrame){
-        this.loginPanel = loginPanel;
-        this.indexFrame = indexFrame;
-    }
-    // 关闭登陆界面,显示主页面函数
-    private void closeLoginPanel(){
-        loginPanel.delFrame(); // 销毁登陆界面
-        indexFrame.showFrame(); // 显示首界面
+    // 抛出匹配成功请求
+    private void throwMatchSuccessRequest(String data){
+        try {
+            // 取出匹配成功,对手的id
+            String value = JsonData.getJsonMap(data).get("value").toString();
+            this.successor.handleRequest(new EventRequest(EvenType.MATCHSUCCESS,value));
+        }catch (IOException e){e.printStackTrace();}
     }
 
     // 接收数据线程类

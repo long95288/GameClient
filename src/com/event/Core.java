@@ -4,6 +4,7 @@ import com.Config.BlockType;
 import com.Config.Config;
 import com.Config.EvenType;
 import com.JsonData.JsonData;
+import com.Store.Store;
 
 import java.awt.event.MouseEvent;
 import java.util.Map;
@@ -15,6 +16,8 @@ public class Core extends Handle {
     private int column;
     private int mineNumber; // 雷的数量
     private Mine[] mines; // 雷的实例
+    private int flagNumber; // 旗子的数量
+
     public Core(){
         // this.map = map;
         init(); // 初始化
@@ -26,6 +29,7 @@ public class Core extends Handle {
         rows = Config.getRows(); // 获得行数
         column = Config.getColumn(); // 获得列数
         mineNumber = Config.getMineNumber(); // 获得雷的数目
+        flagNumber = mineNumber; // 获得旗子的初始值
         // 设置地雷
         SetMines();
     }
@@ -65,6 +69,12 @@ public class Core extends Handle {
         for (int i = 0; i< mineNumber; i++){
             System.out.println("地雷数据:"+mines[i].getX()+"|"+mines[i].getY());
         }
+    }
+    // 重新布雷和旗子
+    public void resetMines(){
+        flagNumber = Config.getMineNumber();
+        SetMines();
+        throwFlagUpdateRequest(); // 发送更新请求
     }
 
     // 获得坐标x,y周围的雷数
@@ -161,7 +171,21 @@ public class Core extends Handle {
         // 发送更新雷区请求
         this.successor.handleRequest(new EventRequest(EvenType.UPDATE,requestData));
         // 向服务器发送更新的数据
-        this.successor.handleRequest(new EventRequest(EvenType.SENDDATA,requestData));
+        // 生成服务器数据
+        String sendData = JsonData.formatTransmitToJsonData(String.valueOf(x),String.valueOf(y),String.valueOf(value));
+        System.out.println("转发雷区方块数据"+sendData);
+        this.successor.handleRequest(new EventRequest(EvenType.SENDDATA,sendData));
+    }
+
+    // 发送游戏结束请求
+    private void throwGameOverRequest(String data){
+        this.successor.handleRequest(new EventRequest(EvenType.GAMEOVER,data));
+    }
+
+    // 发送旗子更新请求
+    private void throwFlagUpdateRequest(){
+        String data = String.valueOf(flagNumber);
+        this.successor.handleRequest(new EventRequest(EvenType.FLAGEUPDATE,data));
     }
 
     @Override
@@ -182,10 +206,17 @@ public class Core extends Handle {
                 // 鼠标右键事件处理
                 System.out.println("右键点击");
                 if (map[x][y] == BlockType.UNDEFINE){
-                    // 更新雷区请求
-                    ThrowUpdateRequest(x,y,BlockType.FLAG);
-                    // 同步本地地图数据
-                    map[x][y] = BlockType.FLAG;
+                    // 旗子数目还剩下->更新雷区请求
+                    if (flagNumber > 0){
+                        // 将旗子数目减一
+                        flagNumber-=1;
+                        // 抛出旗子更新请求
+                        throwFlagUpdateRequest();
+                        // 抛出更新雷区数据请求
+                        ThrowUpdateRequest(x,y,BlockType.FLAG);
+                        // 同步本地地图数据
+                         map[x][y] = BlockType.FLAG;
+                    }
                 }
             }else if (type == MouseEvent.BUTTON1){
                 // 鼠标左键事件处理
@@ -195,7 +226,8 @@ public class Core extends Handle {
                 if (isMine(x,y) && map[x][y] == BlockType.UNDEFINE ){
                     // 触雷，游戏结束
                     System.out.println("你输了");
-                    GameOver();
+//                    String gameStatus = "defeat"; // 游戏失败
+                    GameOver(Store.DEFEAT);
                 }
                 //
                 if (map[x][y] == BlockType.UNDEFINE){
@@ -211,7 +243,12 @@ public class Core extends Handle {
                         ThrowUpdateRequest(x,y,surroundmines);
                     }
                 }else if (map[x][y] == BlockType.FLAG){
-                    // 去掉旗子
+                    // 旗子加一
+                    flagNumber += 1;
+                    // 抛出旗子更新的请求
+                    throwFlagUpdateRequest();
+
+                    // 抛出更新雷区数据请求
                     ThrowUpdateRequest(x,y,BlockType.UNDEFINE);
                     // 同步数据
                     map[x][y] = BlockType.UNDEFINE;
@@ -224,7 +261,7 @@ public class Core extends Handle {
             if (CheckWin()){
                 // 赢了
                 System.out.println("你赢了");
-                GameOver();
+                GameOver(Store.WIN);
             }
         }else if (this.successor != null){
             // 将请求传递下去
@@ -247,12 +284,14 @@ public class Core extends Handle {
     }
 
     // 游戏结束
-    private void GameOver(){
+    private void GameOver(String data){
         for (int i = 0; i < mineNumber; i ++){
             // 设置地图
-            // map[mines[i].getX()][mines[i].getY()] = BlockType.MINE;
             ThrowUpdateRequest(mines[i].getX(),mines[i].getY(),BlockType.MINE);
         }
+
+        // 发送游戏结束请求
+        throwGameOverRequest(data);
     }
 
 }

@@ -1,13 +1,15 @@
 package com.Utils;
 
+import com.Config.Config;
 import com.Config.EvenType;
+import com.Store.Store;
 import com.View.IndexFrame;
 import com.View.LoginPanel;
 import com.View.OperatePanel;
+import com.event.Core;
 import com.event.Counter;
 import com.event.EventRequest;
 import com.event.Handle;
-import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
 
@@ -16,50 +18,21 @@ import javax.swing.*;
 public class TopHandler extends Handle {
     private LoginPanel loginPanel;
     private IndexFrame indexFrame;
-    private OperatePanel operatePanel; // 操作面板
     private Counter counter;
-    public TopHandler() {
+    private Core core;
+    public TopHandler(Core core,IndexFrame indexFrame,LoginPanel loginPanel) {
+        this.core = core;
+        this.indexFrame = indexFrame;
+        this.loginPanel = loginPanel;
         init();
     }
 
     // 初始化
     private void init(){
         counter = new Counter();
-    }
-
-    // 设置登陆窗口
-    public void setLoginPanel(LoginPanel loginPanel) {
-        this.loginPanel = loginPanel;
-    }
-
-    // 设置首页面
-    public void setIndexFrame(IndexFrame indexFrame) {
-        this.indexFrame = indexFrame;
-    }
-
-    // 设置操作界面
-    public void setOperatePanel(OperatePanel operatePanel) {
-        this.operatePanel = operatePanel;
-    }
-
-    // 关闭登陆页面
-    private void closeLoginPanel(){
-        loginPanel.delFrame();
-    }
-
-    // 打开首页
-    private void openIndexFrame(){
-        indexFrame.showFrame();
-    }
-
-    // 设置我方ID
-    private void setOwnId(String id){
-        indexFrame.setOwnId(id);
-    }
-
-    // 设置对方ID
-    private void setOpponentId(String id){
-        indexFrame.setOpponentId(id);
+        counter.start(); // 开启计数线程
+        // 获得首页时间标签的引用
+        counter.setShowTimeLabel(indexFrame.getTimeLabel());
     }
     @Override
     public void handleRequest(EventRequest request) {
@@ -76,6 +49,8 @@ public class TopHandler extends Handle {
        }else if (requestType.equals(EvenType.MATCHSUCCESS)){
            // 匹配成功
            handleMatchSuccess(data);
+       }else if (requestType.equals(EvenType.GAMEOVER)){
+           handleGameOver(data);
        }
     }
 
@@ -84,8 +59,7 @@ public class TopHandler extends Handle {
         // 关闭登陆窗口
         loginPanel.delFrame();
         // 设置我方id
-        String id = "dd";
-        indexFrame.setOwnId(id);
+        indexFrame.setOwnId(data);
         // 显示棋局信息
         indexFrame.showFrame(); // 显示首页
 
@@ -99,13 +73,33 @@ public class TopHandler extends Handle {
 
     //TODO 处理匹配成功请求
     private void handleMatchSuccess(String data){
+        // 设置可以点击
+        Store.setMouseClickable(true);
         // 设置对手id
-        indexFrame.setOpponentId("对手id");
+        indexFrame.setOpponentId(data);
         // 设置操作面板的按钮
+        indexFrame.setStartBtnText("对战中..");
         // 启动计时
-        counter.setShowTimeLabel(operatePanel.getTimeLbl());
-        counter.start(); // 开启线程
+
+
         counter.StartCount(); // 开始计时
 
+    }
+    // TODO 处理游戏结束请求
+    private void handleGameOver(String data){
+        // 停止计时
+        counter.StopCount();
+        // 设置雷区不可点击
+        Store.setMouseClickable(false);
+        // 提示信息
+        if (data.equals(Store.WIN)){
+            JOptionPane.showMessageDialog(null,"游戏结束,你赢得本此对局");
+        }else {
+            JOptionPane.showMessageDialog(null,"游戏结束,你踩到雷了");
+        }
+        // 将面板恢复成默认状态
+        indexFrame.setDefault();
+        // 重新设置雷区
+        core.resetMines();
     }
 }

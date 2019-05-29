@@ -2,6 +2,7 @@ package com.event;
 
 import com.Config.EvenType;
 import com.JsonData.JsonData;
+import com.Store.Store;
 ;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -40,8 +41,9 @@ public class MyMouseListener extends Handle {
 
     // 鼠标事件
     private void ThrowMouseEvent(String value){
-        // 向职责链发送CLICK事件请求
-        if (this.successor != null) {
+        //  向职责链发送CLICK事件请求
+        //  可以点击
+        if (this.successor != null && Store.isMouseClickable())  {
             this.successor.handleRequest(new EventRequest(EvenType.CLICK, value));
         }
     }

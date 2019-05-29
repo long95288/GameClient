@@ -44,7 +44,7 @@ public class JsonData {
 
     // 格式化游戏内的方块更新数据
     public static String formatTransmitToJsonData(String x,String y,String value){
-        return getJson(new TransmitJson(x,y,value));
+        return getJson(new UpdateGameBlockJson(x,y,value));
     }
     // 获得json的字典
     public static Map getJsonMap(String value) throws IOException{
@@ -65,5 +65,9 @@ public class JsonData {
             if (restr == null) restr = "ERROR";
         }
         return restr;
+    }
+    // 获得updateGame对应的对象
+    public static UpdateGameBlockJson getUpdateGameBlockObject(String data) throws IOException{
+        return mapper.readValue(data,UpdateGameBlockJson.class);
     }
 }

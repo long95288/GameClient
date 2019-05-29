@@ -86,6 +86,11 @@ public class MineField extends Handle {
         return s.split("\\|");
     }
 
+    // 恢复默认
+    public void setDefault(){
+        setDefaultMap();
+        mineFieldJpanel.repaint();
+    }
     @Override
     public void handleRequest(EventRequest request) {
         // 处理请求 UPDATE

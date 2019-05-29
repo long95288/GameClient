@@ -37,9 +37,6 @@ public class OperatePanel extends Handle {
         timeLbl.setHorizontalAlignment(SwingConstants.CENTER); //居中
         timeLbl.setPreferredSize(Config.getOperateComponentSize());
 
-//        flagIcon = new JLabel("dsfsfs");
-//        flagIcon.setIcon(new ImageIcon("flag.png"));
-
         flagNumbersLbl = new JLabel(String.valueOf(Config.getMineNumber()));
         flagNumbersLbl.setIcon(new ImageIcon(Config.getFlagImagePath()));
         flagNumbersLbl.setFont(Config.getLabelFont());
@@ -64,7 +61,7 @@ public class OperatePanel extends Handle {
                     // 向责任链发送一个sendData的请求
                     // 数据为:{type:MATCH}
 //                    JOptionPane.showMessageDialog(null,"鼠标左键");
-                    String matchData = "{type:\"MATCH\"}";
+                    String matchData = "{\"type\":\"MATCH\"}";
                     startBtn.setText("匹配中.");
                     startBtn.setEnabled(false);
                     if (successor!=null){successor.handleRequest(new EventRequest(EvenType.SENDDATA,matchData));}
@@ -82,20 +79,37 @@ public class OperatePanel extends Handle {
     public JLabel getTimeLbl() {
         return timeLbl;
     }
-
-    // 设置旗子数目
-    public void setFlagNumbersLbl(String flags){
-        flagNumbersLbl.setText(flags);
+    // 获得旗子
+    public JLabel getFlagLabel(){
+        return flagNumbersLbl;
     }
 
-//    // 设置时间标签
-//    public void setTimeLbl(String time) {
-//        timeLbl.setText(time);
-//    }
+    // 设置旗子数目
+//    public void setFlagNumbersLbl(String flags){
+////        flagNumbersLbl.setText(flags);
+////    }
 
+    // 设置开始匹配按钮的文字
+    public void setStartBtnText(String text){
+        startBtn.setText(text);
+    }
+
+    // 恢复成默认状态
+    public void setDefault(){
+        // 旗子数量恢复成原来的
+        flagNumbersLbl.setText(String.valueOf(Config.getMineNumber()));
+        // 时间归零
+        timeLbl.setText("000");
+        // 按钮回归
+        startBtn.setText("开始匹配");
+        startBtn.setEnabled(true);
+    }
     @Override
     public void handleRequest(EventRequest request) {
-        if (successor!=null) {
+        // TODO 接收旗子更新的请求
+        if (request.getEventType().equals(EvenType.FLAGEUPDATE)){
+            flagNumbersLbl.setText(request.getEventData());
+        }else if (successor!=null) {
             successor.handleRequest(request);
         }
     }

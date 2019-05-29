@@ -1,6 +1,7 @@
 package com.View;
 
 import com.Config.Config;
+import com.Store.Store;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,14 +15,14 @@ public class IndexFrame {
     private JLabel ownId; // 本人的游戏id
     private JLabel opponentId; // 对手的游戏id
     private JLabel vsLabel; // vs的标签
-    private JPanel ownMineFieldPanel; // 我方雷区面板
-    private JPanel operationPanel; // 操作的面板
-    private JPanel opponentMineFieldPanel; // 对方雷区面板
+    private MineField ownMineField; // 我方雷区面板
+    private MineField opponentMineField; // 对方游戏面板
+    private OperatePanel operatePanel; // 操作面板
     private Container container; // 组件容器
-    public IndexFrame(JPanel ownMineFieldPanel,JPanel operationPanel,JPanel opponentMineFieldPanel){
-        this.ownMineFieldPanel = ownMineFieldPanel;
-        this.operationPanel = operationPanel;
-        this.opponentMineFieldPanel = opponentMineFieldPanel;
+    public IndexFrame(MineField ownMineFieldPanel,OperatePanel operationPanel,MineField opponentMineFieldPanel){
+        this.ownMineField = ownMineFieldPanel;
+        this.operatePanel = operationPanel;
+        this.opponentMineField = opponentMineFieldPanel;
         init();
     }
     // 初始化
@@ -53,11 +54,13 @@ public class IndexFrame {
         Dimension labelSize = new Dimension(Config.getColumn()*40,40); // 标签大小
 
         ownId.setFont(labelFont);
-        ownId.setText("我方:");
+        ownId.setIcon(Config.getIdImg());
+        ownId.setText(Store.getAccount());
         ownId.setPreferredSize(labelSize);
 
         opponentId.setFont(labelFont);
-        opponentId.setText("对方:");
+        opponentId.setIcon(Config.getIdImg());
+        opponentId.setText(Store.getOpponentId());
         opponentId.setPreferredSize(labelSize);
 
         Dimension vsLabelSize = new Dimension(100,40);
@@ -74,9 +77,9 @@ public class IndexFrame {
         container.add(ownId);
         container.add(vsLabel);
         container.add(opponentId);
-        container.add(ownMineFieldPanel);
-        container.add(operationPanel);
-        container.add(opponentMineFieldPanel);
+        container.add(ownMineField.getMineFieldJpanel());
+        container.add(operatePanel.getContent());
+        container.add(opponentMineField.getMineFieldJpanel());
     }
     // 设置组件的监听
     private void setComponentEventListener(){
@@ -106,8 +109,31 @@ public class IndexFrame {
     public void setOpponentId(String opponentId){
         this.opponentId.setText(opponentId);
     }
-    // 添加我方雷区
 
+    // 重新设置界面
+    public void setDefault(){
+        // 将对手id设置未匹配
+        setOpponentId(Store.getOpponentId());
+        // 将棋盘设置为初始状态
+        ownMineField.setDefault();
+//        ownMineField.getMineFieldJpanel().repaint();
+        opponentMineField.setDefault();
+        // 操作面板设置成默认状态
+        operatePanel.setDefault();
+    }
+
+    // 设置按钮
+    public void setStartBtnText(String text){
+        operatePanel.setStartBtnText(text);
+    }
+    // 获得时间标签的引用
+    public JLabel getTimeLabel(){
+        return operatePanel.getTimeLbl();
+    }
+    // 获得旗子标签的引用
+    public JLabel getFlagLabel(){
+        return operatePanel.getFlagLabel();
+    }
     // 显示首页的界面
     public void showFrame(){
         mainFrame.setVisible(true);
