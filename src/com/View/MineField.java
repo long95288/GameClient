@@ -9,6 +9,7 @@ import com.event.Handle;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -45,8 +46,7 @@ public class MineField extends Handle {
         // 设置大小
         mineFieldJpanel.setPreferredSize(new Dimension(column*40, rows*40));
         mineFieldJpanel.setVisible(true);
-//        g = mineFieldJpanel.getGraphics();
-//       paint(); // 绘制地图
+
     }
 
     // 设置初始化的地图
@@ -56,6 +56,10 @@ public class MineField extends Handle {
             {
                 map[i][j] = BlockType.UNDEFINE;
             }
+    }
+    // 设置鼠标监听
+    public void setMouseListener(MouseListener mouseListener){
+        mineFieldJpanel.addMouseListener(mouseListener);
     }
 
     // 更新地图函数

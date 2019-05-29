@@ -1,42 +1,32 @@
 package com.event;
 
 import com.Config.EvenType;
+import com.JsonData.JsonData;
 ;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class MyMouseListener extends Handle {
 
-    MouseListener listener ;
+    private MouseListener listener ;
     public MyMouseListener() {
         super();
         inti();
-        // 抛出鼠标的点击事件
-        // this.successor.handleRequest(new EventRequest("CLICK","x|y"));
     }
     private void inti(){
-        listener = new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-            }
+        listener = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 int type = e.getButton(); // 获得按钮的类型。左键还是右键
                 int clickX = e.getY()/40;
                 int clickY = e.getX()/40;
-                String value =clickX+"|"+clickY+"|"+type;
+//                String value =clickX+"|"+clickY+"|"+type;
+                String value = JsonData.formatClickJson(String.valueOf(clickX),
+                        String.valueOf(clickY),String.valueOf(type));
                 System.out.println("鼠标事件："+value);
                 // 抛出鼠标事件
                 ThrowMouseEvent(value);
-            }
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
             }
         };
     }

@@ -9,8 +9,8 @@ import com.event.Handle;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 public class LoginPanel extends Handle {
 
@@ -83,7 +83,7 @@ public class LoginPanel extends Handle {
     }
     // 设置按钮鼠标监听
     private void setButtonListener(){
-        loginBtn.addMouseListener(new MouseListener() {
+        loginBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1)
@@ -98,20 +98,6 @@ public class LoginPanel extends Handle {
                     // 抛出登陆请求
                     throwLoginRequest(account,digest);
                 }
-            }
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
             }
         });
     }

@@ -3,8 +3,10 @@ package com.event;
 import com.Config.BlockType;
 import com.Config.Config;
 import com.Config.EvenType;
+import com.JsonData.JsonData;
 
 import java.awt.event.MouseEvent;
+import java.util.Map;
 
 // 核心处理类
 public class Core extends Handle {
@@ -163,15 +165,18 @@ public class Core extends Handle {
     }
 
     @Override
-    public void handleRequest(EventRequest request) {
+    public void handleRequest(EventRequest request){
         // 接收鼠标点击事件
         if (request.getEventType().equals(EvenType.CLICK)){
             String data = request.getEventData();
-            String[] values = data.split("\\|"); // 分割值
 
-            int x = Integer.parseInt(values[0]);
-            int y = Integer.parseInt(values[1]);
-            int type = Integer.parseInt( values[2]);
+            Map<String,Object> valueMap=null;
+            try {
+                valueMap = JsonData.getJsonMap(data);
+            }catch (Exception e){e.printStackTrace();}
+            int x = Integer.parseInt(valueMap.get("x").toString());
+            int y = Integer.parseInt(valueMap.get("y").toString());
+            int type = Integer.parseInt(valueMap.get("type").toString());
             System.out.println("Core类接收CLICK事件"+data);
             if (type == MouseEvent.BUTTON3){
                 // 鼠标右键事件处理

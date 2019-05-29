@@ -2,7 +2,6 @@ package com.JsonData;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -31,19 +30,29 @@ public class JsonData {
         }
         return jsonText;
     }
+    // 格式化鼠标点击数据
+    public static String formatClickJson(String x,String y, String type){
+        ClickJson clickJson = new ClickJson();
+        clickJson.setX(x);
+        clickJson.setY(y);
+        clickJson.setType(type);
+        String jsonText;
+        jsonText = getJson(clickJson);
+        assert jsonText.equals("ERROR"):"获得错误信息";
+        return jsonText;
+    }
+
     // 格式化游戏内的方块更新数据
     public static String formatTransmitToJsonData(String x,String y,String value){
         return getJson(new TransmitJson(x,y,value));
     }
+    // 获得json的字典
+    public static Map getJsonMap(String value) throws IOException{
+            return mapper.readValue(value, new TypeReference<Map<String, Object>>(){});
+    }
     // 获得服务器返回的数据类型
-    public static String getServerResponseType(String data){
-        String type = "ERROR";
-        try {
-            Map<String, Object> map = mapper.readValue(data, new TypeReference<Map<String, Object>>() {
-            });
-            type = map.get("type").toString();
-        }catch (IOException e){e.printStackTrace();}
-        return type;
+    public static String getServerResponseType(String data) throws IOException{
+        return getJsonMap(data).get("type").toString();
     }
     // 从对象中获得json的数据
     private static String getJson(Object object){

@@ -11,6 +11,7 @@ import com.event.Handle;
 
 import javax.swing.*;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ConnectException;
@@ -103,7 +104,11 @@ public class Connection extends Handle {
     private void receiveData(String data){
         // 向职责链中发送处理请求,更新面板数据
         // 获得服务器返回的数据类型
-        String type = JsonData.getServerResponseType(data);
+        String type="ERROR";
+        try {
+            type = JsonData.getServerResponseType(data);
+        }catch (IOException e){e.printStackTrace();};
+
         // if (type.equa)
         if (type.equals(RecieveDataType.LOGINSUCCESS)){
             // 抛出登陆成功请求
