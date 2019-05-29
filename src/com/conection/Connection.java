@@ -17,6 +17,8 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 
+import java.net.UnknownHostException;
+import java.rmi.UnexpectedException;
 import java.util.Vector;
 
 // 连接服务器类，
@@ -41,29 +43,61 @@ public class Connection extends Handle {
         connectServer();
     }
     private void connectServer(){
-        try{
-            socket = new Socket(ip,port);
-            // 连接成功后执行的逻辑
-            // 创建接收数据线程
-            ReceiveDataThread receiveDataThread = new ReceiveDataThread();
-            receiveDataThread.start(); // 开启监听线程
+        // 连接线程
 
-            // 创建数据发送线程
-            SendDataThread sendDataThread = new SendDataThread();
-            sendDataThread.start();
+        Thread connectThread = new Thread(new Runnable() {
+            boolean isConnect = false; // 未连接
+            @Override
+            public void run() {
+                 while (!isConnect) {
+                    try {
+                        socket = new Socket(ip, port);
+                        // 连接成功后执行的逻辑
+                        // 退出死循环
+                        isConnect = true;
+                        // 创建接收数据线程
+                        ReceiveDataThread receiveDataThread = new ReceiveDataThread();
+                        receiveDataThread.start(); // 开启监听线程
 
-        }catch (ConnectException e){
-//            e.getMessage();
-            System.out.println(e.getMessage());
-            if (e.getMessage().equals("Connection timed out: connect")){
-                JOptionPane.showMessageDialog(null,"网络超时！");}
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }finally {
+                        // 创建数据发送线程
+                        SendDataThread sendDataThread = new SendDataThread();
+                        sendDataThread.start();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (!isConnect)
+                        {
+                            System.out.println("未连接到服务器,正在尝试重新连接");
+                        }
+                        else {
+                            System.out.println("连接成功!!");
+                        }
+                    }
+                    try {
+                        // 睡眠1秒后再重试
+                        Thread.sleep(1000);
+                    }catch (InterruptedException e){e.printStackTrace();}
 
-        }
+                }
+            }
+        });
+        connectThread.start();
+
+
+
+//
+//        }catch (ConnectException e){
+////            e.getMessage();
+//            System.out.println(e.getMessage());
+//            if (e.getMessage().equals("Connection timed out: connect")){
+//                JOptionPane.showMessageDialog(null,"网络超时！");}
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }finally {
+//
+//        }
     }
 
     // 发送数据函数
