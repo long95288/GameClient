@@ -1,3 +1,6 @@
 # 不跟踪文件及其目录
 /bin/
 /lib/
+/out/
+/META-INF/
+.idea

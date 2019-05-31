@@ -1,7 +1,13 @@
 package com.Config;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
 import javax.swing.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
+import java.io.File;
 
 /*
  * 配置类
@@ -16,6 +22,23 @@ public class Config {
 	private static String ip = "169.254.197.29";
 	private static int port = 8080;
 	public static boolean debug = false; // 调试标记,
+    static {
+        try{
+            File f = new File("config.xml");
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();// 获得实例
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(f);
+            ip = doc.getElementsByTagName("ip").item(0).getTextContent(); // 获得节点的值
+            port = Integer.parseInt(doc.getElementsByTagName("port").item(0).getTextContent());
+//            NodeList nodeList = doc.getElementsByTagName("server");
+            System.out.println("ip="+doc.getElementsByTagName("ip").item(0).getTextContent());
+            System.out.println("port="+doc.getElementsByTagName("port").item(0).getTextContent());
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null,"读取配置文件出错");
+            System.exit(0);
+            e.printStackTrace();
+        }
+    }
 
 	public static String getFlagImagePath() {
 		return flagImagePath;
