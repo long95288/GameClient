@@ -1,5 +1,7 @@
 package com.JsonData;
 
+import com.JsonData.SendDataJson.GameGrade;
+import com.JsonData.SendDataJson.GameOverJson;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,5 +71,21 @@ public class JsonData {
     // 获得updateGame对应的对象
     public static UpdateGameBlockJson getUpdateGameBlockObject(String data) throws IOException{
         return mapper.readValue(data,UpdateGameBlockJson.class);
+    }
+
+    // 获得gameGrade字符串
+    public static String getGameGrade(String gameOverType,String time,String description){
+        GameGrade gameGrade = new GameGrade();
+        gameGrade.setGameOverType(gameOverType);
+        gameGrade.setTime(time);
+        gameGrade.setDescription(description);
+        return getJson(gameGrade);
+    }
+
+    // 获得游戏结束字符串
+    public static String getGameOverJson(String gameOverType){
+        GameOverJson gameOverJson = new GameOverJson();
+        gameOverJson.setValue(gameOverType);
+        return JsonData.getJson(gameOverJson);
     }
 }

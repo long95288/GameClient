@@ -4,6 +4,7 @@ import com.Config.BlockType;
 import com.Config.Config;
 import com.Config.EvenType;
 import com.JsonData.JsonData;
+import com.Store.GameOverType;
 import com.Store.Store;
 
 import java.awt.event.MouseEvent;
@@ -179,6 +180,9 @@ public class Core extends Handle {
 
     // 发送游戏结束请求
     private void throwGameOverRequest(String data){
+        // 向服务器发送游戏结束通知
+        String gameOverData = JsonData.getGameOverJson(data);
+        this.successor.handleRequest(new EventRequest(EvenType.SENDDATA,gameOverData));
         this.successor.handleRequest(new EventRequest(EvenType.GAMEOVER,data));
     }
 
@@ -226,8 +230,8 @@ public class Core extends Handle {
                 if (isMine(x,y) && map[x][y] == BlockType.UNDEFINE ){
                     // 触雷，游戏结束
                     System.out.println("你输了");
-//                    String gameStatus = "defeat"; // 游戏失败
-                    GameOver(Store.DEFEAT);
+                    // 触雷结束游戏
+                    GameOver(GameOverType.DEFEAT1);
                 }
                 //
                 if (map[x][y] == BlockType.UNDEFINE){
@@ -261,7 +265,8 @@ public class Core extends Handle {
             if (CheckWin()){
                 // 赢了
                 System.out.println("你赢了");
-                GameOver(Store.WIN);
+                // 最先扫完雷
+                GameOver(GameOverType.WIN1);
             }
         }else if (this.successor != null){
             // 将请求传递下去

@@ -2,14 +2,18 @@ package com.Utils;
 
 import com.Config.Config;
 import com.Config.EvenType;
+import com.JsonData.JsonData;
+import com.Store.GameOverType;
 import com.Store.Store;
 import com.View.IndexFrame;
 import com.View.LoginPanel;
 import com.View.OperatePanel;
+import com.conection.Connection;
 import com.event.Core;
 import com.event.Counter;
 import com.event.EventRequest;
 import com.event.Handle;
+import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
 
@@ -20,6 +24,7 @@ public class TopHandler extends Handle {
     private IndexFrame indexFrame;
     private Counter counter;
     private Core core;
+    private Connection connection;
     public TopHandler(Core core,IndexFrame indexFrame,LoginPanel loginPanel) {
         this.core = core;
         this.indexFrame = indexFrame;
@@ -53,6 +58,10 @@ public class TopHandler extends Handle {
            handleGameOver(data);
        }
     }
+    // 发送函数
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
 
     // TODO 处理登陆成功请求、
     private void handleLoginSuccess(String data){
@@ -80,23 +89,61 @@ public class TopHandler extends Handle {
         // 设置操作面板的按钮
         indexFrame.setStartBtnText("对战中..");
         // 启动计时
-
-
         counter.StartCount(); // 开始计时
-
     }
+    // TODO 发送成绩到服务器
+    private void sendGameGrade(String type,String time,String description){
+        String grade = JsonData.getGameGrade(type,time,description);
+        if (connection!=null) connection.sendData(grade);
+        else{System.out.println("topHandler没有连接器");}
+    }
+
     // TODO 处理游戏结束请求
     private void handleGameOver(String data){
         // 停止计时
         counter.StopCount();
         // 设置雷区不可点击
         Store.setMouseClickable(false);
+        // 获得时间
+        String time = String.valueOf(counter.getCount());
+        String description;
         // 提示信息
-        if (data.equals(Store.WIN)){
-            JOptionPane.showMessageDialog(null,"游戏结束,你赢得本此对局");
-        }else {
-            JOptionPane.showMessageDialog(null,"游戏结束,你踩到雷了");
+        //
+        String type = data;
+        if (type.equals(GameOverType.WIN1)){
+            // 获得时间
+            description = "最先扫完雷";
+            sendGameGrade(type,time,description);
+            JOptionPane.showMessageDialog(null,"游戏结束,你最先扫完雷");
+        }else if (type.equals(GameOverType.WIN2)){
+            description = "对方碰雷雷了";
+            sendGameGrade(type,time,description);
+            JOptionPane.showMessageDialog(null,"游戏结束，对方碰雷了");
+        }else if (type.equals(GameOverType.DEFEAT1)){
+            //
+            time = "-1";
+            description = "你碰雷了";
+            sendGameGrade(type,time,description);
+            JOptionPane.showMessageDialog(null,"游戏结束,你碰雷了");
+        }else if (type.equals(GameOverType.DEFEAT2)){
+            time = "-1";
+            description = "你手不够快";
+            sendGameGrade(type,time,description);
+            JOptionPane.showMessageDialog(null,"游戏结束,你手不够快哦");
         }
+        /*游戏结束请求
+        * 1、type: GAMEOVER data: win1
+        * 2、type: GAMEOVER data: win2
+        * 3、type: GAEMOVER data: defeat1
+        * 4、type: GAMEOVER data: defeat2
+        * */
+        /* 游戏结束发送到服务器的数据
+        *  1、赢(Core) 我方最先结束 WIN1  发送数据为 type: GameGrade value: win1 description: costTime
+        *  2、赢(Connection) 对方先碰雷 WIN2  发送数据为 type: GameGrade value: win2 description: 对方先碰雷
+        *  3、输(Core) 我方碰雷 DEFEAT1 发送数据为 type: GameGrade value: defeat1 - 我方碰雷
+        *  4、输(Connection) 对方先结束 DEFEAT2 发送数据为 type: GameGrade value: defeat2 - 对方先结束
+        */
+
         // 将面板恢复成默认状态
         indexFrame.setDefault();
         // 重新设置雷区

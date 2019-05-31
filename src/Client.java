@@ -23,7 +23,7 @@ public class Client {
         IndexFrame indexFrame = new IndexFrame( ownMineField, operatePanel, opponentMineField ); // 首页
         Core core = new Core(); // 游戏核心处理器
         TopHandler topHandler = new TopHandler(core,indexFrame,loginPanel); // 顶层处理者
-
+        topHandler.setConnection(connection); // 设置连接器
         // 设置责任链
         // loginPanel -> myMouseListener -> core -> operatePanel
         // -> ownMineField -> connection -> opponentMineField -> topHandler

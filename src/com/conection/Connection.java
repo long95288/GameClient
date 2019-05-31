@@ -5,20 +5,15 @@ import com.Config.EvenType;
 import com.Config.RecieveDataType;
 import com.JsonData.JsonData;
 import com.JsonData.UpdateGameBlockJson;
-import com.View.MineField;
 import com.event.EventRequest;
 import com.event.Handle;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ConnectException;
 import java.net.Socket;
 
-import java.net.UnknownHostException;
-import java.rmi.UnexpectedException;
 import java.util.Vector;
 
 // 连接服务器类，
@@ -46,15 +41,15 @@ public class Connection extends Handle {
         // 连接线程
 
         Thread connectThread = new Thread(new Runnable() {
-            boolean isConnect = false; // 未连接
+            boolean isConnected = false; // 未连接
             @Override
             public void run() {
-                 while (!isConnect) {
+                 while (!isConnected) {
                     try {
                         socket = new Socket(ip, port);
                         // 连接成功后执行的逻辑
                         // 退出死循环
-                        isConnect = true;
+                        isConnected = true;
                         // 创建接收数据线程
                         ReceiveDataThread receiveDataThread = new ReceiveDataThread();
                         receiveDataThread.start(); // 开启监听线程
@@ -65,7 +60,7 @@ public class Connection extends Handle {
                     }catch (Exception e) {
                         e.printStackTrace();
                     } finally {
-                        if (!isConnect)
+                        if (!isConnected)
                         {
                             System.out.println("未连接到服务器,正在尝试重新连接");
                         }
@@ -82,22 +77,6 @@ public class Connection extends Handle {
             }
         });
         connectThread.start();
-
-
-
-//
-//        }catch (ConnectException e){
-////            e.getMessage();
-//            System.out.println(e.getMessage());
-//            if (e.getMessage().equals("Connection timed out: connect")){
-//                JOptionPane.showMessageDialog(null,"网络超时！");}
-//        }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }finally {
-//
-//        }
     }
 
     // 发送数据函数
@@ -140,8 +119,10 @@ public class Connection extends Handle {
         }else if (type.equals(RecieveDataType.MATCHSUCCESS)){
             // 匹配成功请求
             throwMatchSuccessRequest(data);
+        }else if (type.equals(RecieveDataType.GAMEOVER)){
+            // 抛出游戏结束请求
+            throwGameOverRequest(data);
         }
-
     }
     // 抛出登陆成功请求
     private void throwLoginSuccessRequest(String date){
@@ -174,6 +155,13 @@ public class Connection extends Handle {
         }catch (IOException e){e.printStackTrace();}
     }
 
+    // 抛出游戏结束请求
+    private void throwGameOverRequest(String data){
+        try {
+            String value = JsonData.getJsonMap(data).get("value").toString();
+            this.successor.handleRequest(new EventRequest(EvenType.GAMEOVER,value));
+        }catch (IOException e){e.printStackTrace();}
+    }
     // 接收数据线程类
     class ReceiveDataThread extends Thread {
         @Override
