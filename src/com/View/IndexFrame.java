@@ -109,7 +109,10 @@ public class IndexFrame {
     public void setOpponentId(String opponentId){
         this.opponentId.setText(opponentId);
     }
-
+    // 获得对手id
+    public String getOpponentId() {
+        return opponentId.getText();
+    }
     // 重新设置界面
     public void setDefault(){
         // 将对手id设置未匹配

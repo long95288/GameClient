@@ -5,6 +5,7 @@ import com.Config.SendDataType;
 public class GameGrade {
     private String type = SendDataType.GAMEGRADE;
     private String gameOverType;
+    private String opponentId;
     private String time;
     private String description;
 
@@ -22,6 +23,14 @@ public class GameGrade {
 
     public void setGameOverType(String gameOverType) {
         this.gameOverType = gameOverType;
+    }
+
+    public String getOpponentId() {
+        return opponentId;
+    }
+
+    public void setOpponentId(String opponentId) {
+        this.opponentId = opponentId;
     }
 
     public String getTime() {

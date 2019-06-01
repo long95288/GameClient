@@ -74,9 +74,10 @@ public class JsonData {
     }
 
     // 获得gameGrade字符串
-    public static String getGameGrade(String gameOverType,String time,String description){
+    public static String getGameGrade(String gameOverType,String opponentId,String time,String description){
         GameGrade gameGrade = new GameGrade();
         gameGrade.setGameOverType(gameOverType);
+        gameGrade.setOpponentId(opponentId);
         gameGrade.setTime(time);
         gameGrade.setDescription(description);
         return getJson(gameGrade);

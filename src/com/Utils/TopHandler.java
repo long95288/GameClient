@@ -92,8 +92,8 @@ public class TopHandler extends Handle {
         counter.StartCount(); // 开始计时
     }
     // TODO 发送成绩到服务器
-    private void sendGameGrade(String type,String time,String description){
-        String grade = JsonData.getGameGrade(type,time,description);
+    private void sendGameGrade(String type,String opponentId,String time,String description){
+        String grade = JsonData.getGameGrade(type,opponentId,time,description);
         if (connection!=null) connection.sendData(grade);
         else{System.out.println("topHandler没有连接器");}
     }
@@ -109,26 +109,27 @@ public class TopHandler extends Handle {
         String description;
         // 提示信息
         //
+        String opponentId = indexFrame.getOpponentId();
         String type = data;
         if (type.equals(GameOverType.WIN1)){
             // 获得时间
             description = "最先扫完雷";
-            sendGameGrade(type,time,description);
+            sendGameGrade(type,opponentId,time,description);
             JOptionPane.showMessageDialog(null,"游戏结束,你最先扫完雷");
         }else if (type.equals(GameOverType.WIN2)){
             description = "对方碰雷雷了";
-            sendGameGrade(type,time,description);
+            sendGameGrade(type,opponentId,time,description);
             JOptionPane.showMessageDialog(null,"游戏结束，对方碰雷了");
         }else if (type.equals(GameOverType.DEFEAT1)){
             //
             time = "-1";
             description = "你碰雷了";
-            sendGameGrade(type,time,description);
+            sendGameGrade(type,opponentId,time,description);
             JOptionPane.showMessageDialog(null,"游戏结束,你碰雷了");
         }else if (type.equals(GameOverType.DEFEAT2)){
             time = "-1";
             description = "你手不够快";
-            sendGameGrade(type,time,description);
+            sendGameGrade(type,opponentId,time,description);
             JOptionPane.showMessageDialog(null,"游戏结束,你手不够快哦");
         }
         /*游戏结束请求
