@@ -47,6 +47,8 @@ public class Connection extends Handle {
                  while (!isConnected) {
                     try {
                         socket = new Socket(ip, port);
+                        //
+                        System.out.println("正在连接");
                         // 连接成功后执行的逻辑
                         // 退出死循环
                         isConnected = true;
@@ -107,13 +109,15 @@ public class Connection extends Handle {
         try {
             type = JsonData.getServerResponseType(data);
         }catch (IOException e){e.printStackTrace();};
-
         // if (type.equa)
         if (type.equals(RecieveDataType.LOGINSUCCESS)){
             // 抛出登陆成功请求
             throwLoginSuccessRequest(data);
-
-        }else if(type.equals(RecieveDataType.UPDATEGAMEBLOCK)){
+        }else if(type.equals(RecieveDataType.LOGINFAILURE)){
+            // 登陆失败请求
+            throwLoginFailureRequest(data);
+        }
+        else if(type.equals(RecieveDataType.UPDATEGAMEBLOCK)){
 //            // 接收到更新对方地图数据请求
             throwUpdateRequest(data);
         }else if (type.equals(RecieveDataType.MATCHSUCCESS)){
@@ -121,6 +125,7 @@ public class Connection extends Handle {
             throwMatchSuccessRequest(data);
         }else if (type.equals(RecieveDataType.GAMEOVER)){
             // 抛出游戏结束请求
+            System.out.println("服务器发送游戏结束数据:"+data);
             throwGameOverRequest(data);
         }
     }
@@ -130,6 +135,16 @@ public class Connection extends Handle {
             String value = JsonData.getJsonMap(date).get("value").toString();
             this.successor.handleRequest(new EventRequest(EvenType.LOGINSUCCESS, value));
         }catch (IOException e){e.printStackTrace();}
+    }
+
+    // 抛出登陆失败请求
+    private void throwLoginFailureRequest(String data){
+        try{
+            String value = JsonData.getJsonMap(data).get("value").toString();
+            this.successor.handleRequest(new EventRequest(EvenType.LOGINFAILURE,value));
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     // 抛出更新对方雷区请求
     private void throwUpdateRequest(String data){
@@ -207,6 +222,8 @@ public class Connection extends Handle {
                             outStream.flush();
                             // 发送之后把该元素删除
                             sendDatas.remove(0);
+                        }else{
+                            System.out.println("连接服务器出错");
                         }
                     }
                 }catch (Exception e) {

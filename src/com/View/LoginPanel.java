@@ -96,6 +96,7 @@ public class LoginPanel extends Handle {
                     System.out.println("密码:"+password);
                     System.out.println("密码hash:"+digest);
                     // 抛出登陆请求
+                    loginBtn.setEnabled(false);
                     throwLoginRequest(account,digest);
                 }
             }
@@ -106,6 +107,13 @@ public class LoginPanel extends Handle {
         // 关闭并退出
         loginfm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+    
+    // 设置成默认页面
+    public void setDefault(){
+        // 按钮使能
+        loginBtn.setEnabled(true);
+        passwordTextFile.setText(""); // 清空密码区
+    }
     // 登陆请求
     private void throwLoginRequest(String account,String password){
         // 生成json字符串
@@ -114,9 +122,9 @@ public class LoginPanel extends Handle {
         if (this.successor != null){
             // 产生一个发送数据的请求
             this.successor.handleRequest(new EventRequest(EvenType.SENDDATA,data));
+        }else {
+            System.out.print("登入事件没有处理者"); 
         }
-        //
-        System.out.print("登入事件没有处理者");
     }
     // 显示界面
     public void showFrame(){

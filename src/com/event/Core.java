@@ -229,12 +229,10 @@ public class Core extends Handle {
                 // 将要挖开的地区是雷，则结束游戏
                 if (isMine(x,y) && map[x][y] == BlockType.UNDEFINE ){
                     // 触雷，游戏结束
-                    System.out.println("你输了");
+                    System.out.println("你触雷了,输了");
                     // 触雷结束游戏
                     GameOver(GameOverType.DEFEAT1);
-                }
-                //
-                if (map[x][y] == BlockType.UNDEFINE){
+                }else if (map[x][y] == BlockType.UNDEFINE){
                     // 挖开该点
                     int surroundmines = GetSurroundMines(x,y);
                     if (surroundmines == 0){
@@ -294,7 +292,6 @@ public class Core extends Handle {
             // 设置地图
             ThrowUpdateRequest(mines[i].getX(),mines[i].getY(),BlockType.MINE);
         }
-
         // 发送游戏结束请求
         throwGameOverRequest(data);
     }

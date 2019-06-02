@@ -71,13 +71,19 @@ public class TopHandler extends Handle {
         indexFrame.setOwnId(data);
         // 显示棋局信息
         indexFrame.showFrame(); // 显示首页
-
     }
 
     // 处理登陆失败请求
     private void handleLoginFailure(String data){
         // 显示提示信息
-        JOptionPane.showMessageDialog(null,"登陆失败");
+        String message;
+        if ("1".equals(data)){
+            message = "密码出错";
+        }else if ("2".equals(data)){
+            message = "你的账号已经登陆!!";
+        }else{ message = "未知错误";}
+        JOptionPane.showMessageDialog(null,"登陆失败"+message);
+        loginPanel.setDefault(); // 恢复成默认的状态
     }
 
     //TODO 处理匹配成功请求

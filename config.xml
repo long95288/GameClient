@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <application>
     <server>
-        <ip>192.168.1.1</ip>
+        <ip>192.168.1.105</ip>
         <port>8080</port>
     </server>
 </application>

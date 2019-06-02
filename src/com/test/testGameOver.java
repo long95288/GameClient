@@ -8,6 +8,7 @@ public class testGameOver {
         System.out.println(JsonData.getGameGrade(
                 GameOverType.WIN1,
                 "100",
+                "300",
                 "第一种胜利"
         ));
 

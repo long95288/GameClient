@@ -28,8 +28,8 @@ public class Client {
         // loginPanel -> myMouseListener -> core -> operatePanel
         // -> ownMineField -> connection -> opponentMineField -> topHandler
         // 模拟器
-        TestMockRequest testMockRequest = new TestMockRequest();
-        testMockRequest.setSuccessor(myMouseListener);
+//        TestMockRequest testMockRequest = new TestMockRequest();
+//        testMockRequest.setSuccessor(myMouseListener);
 
         loginPanel.setSuccessor(myMouseListener);
         myMouseListener.setSuccessor(core);
