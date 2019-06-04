@@ -95,4 +95,21 @@ public class JsonData {
     public static String getLogoutData(){
         return "{\"type\":\""+ SendDataType.LOGOUT+"\"}";
     }
+
+    // 校验格式是否符合规范
+    public static boolean verifiedData(String data){
+        boolean status = true;
+        try {
+            Map map = mapper.readValue(data,new TypeReference<Map<String,Object>>(){});
+            String type = map.get("type").toString();
+            if (type == null){
+                status = false;
+            }
+        }catch (IOException e){
+            status = false;
+        }catch (NullPointerException e){
+            status = false; // 空字符串的传值
+        }
+        return status; // 返回判断的
+    }
 }

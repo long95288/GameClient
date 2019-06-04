@@ -193,8 +193,11 @@ public class Connection extends Handle {
                         // 处理服务器接收到的数据
                         String cmd = inStream.readLine(); // 读取数据
                         System.out.println("接到服务器数据:"+cmd);
-                        if (cmd != null){
+                        // 符合规范的数据
+                        if (cmd != null && JsonData.verifiedData(cmd)){
                             receiveData(cmd); // 调用接收数据函数处理消息
+                        }else{
+                            System.out.println("未符合规范的数据"+cmd);
                         }
                     }
                 }
