@@ -7,4 +7,5 @@ public class SendDataType {
     public static String GAMEOVER = "GAMEOVER"; // 游戏结束数据
     public static String MATCH = "MATCH"; // 匹配请求
     public static String GAMEGRADE = "GAMEGRADE"; // 游戏成绩
+    public static String LOGOUT = "LOGOUT"; // 退出游戏
 }

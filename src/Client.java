@@ -12,6 +12,8 @@ public class Client {
     // 客户端
     public static void main(String[] argv){
 
+        // 配置参数
+        System.setProperty("Dfile.encoding","UTF-8");
         LoginPanel loginPanel = new LoginPanel();// 登陆面板
         MyMouseListener myMouseListener = new MyMouseListener(); //雷区鼠标监听器
         MineField ownMineField = new MineField(); // 我方雷区

@@ -1,7 +1,10 @@
 package com.View;
 
 import com.Config.Config;
+import com.Config.EvenType;
+import com.JsonData.JsonData;
 import com.Store.Store;
+import com.event.EventRequest;
 
 import javax.swing.*;
 import java.awt.*;
@@ -92,6 +95,8 @@ public class IndexFrame {
                 int n = JOptionPane.showConfirmDialog(mainFrame,"是否退出游戏","提示",JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION){
                     // 确认退出
+                    String data = JsonData.getLogoutData();
+                    operatePanel.handleRequest(new EventRequest(EvenType.SENDDATA,data));
                     // System.out.println("关闭窗口");
                     mainFrame.dispose();
                     System.exit(0);

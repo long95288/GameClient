@@ -1,5 +1,6 @@
 package com.JsonData;
 
+import com.Config.SendDataType;
 import com.JsonData.SendDataJson.GameGrade;
 import com.JsonData.SendDataJson.GameOverJson;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -84,9 +85,14 @@ public class JsonData {
     }
 
     // 获得游戏结束字符串
-    public static String getGameOverJson(String gameOverType){
+    public static String getGameOverJson(String gameOverType) {
         GameOverJson gameOverJson = new GameOverJson();
         gameOverJson.setValue(gameOverType);
         return JsonData.getJson(gameOverJson);
+    }
+
+    // 登出请求
+    public static String getLogoutData(){
+        return "{\"type\":\""+ SendDataType.LOGOUT+"\"}";
     }
 }

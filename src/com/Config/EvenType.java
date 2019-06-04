@@ -12,6 +12,7 @@ public class EvenType {
     public static String MATCHSUCCESS = "MATCHSUCCESS"; // 匹配成功
     public static String GAMEOVER = "GAMEOVER"; // 游戏结束
     public static String FLAGEUPDATE = "GLAGEUPDATE";// 旗子更新的数据
+    public static String LOGOUT = "LOGOUT"; // 退出游戏请求
 
     EvenType(){}
 }
